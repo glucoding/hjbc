@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	
+	
+		<persistence-unit name="HJDB" transaction-type="JTA">
+			<description>generated-persistence-unit</description>
+			<provider>org.hibernate.ejb.HibernatePersistence</provider>
+      			<class>com.hejiascm.domain.Orgsummaryinfo</class>
+      			<class>com.hejiascm.domain.Orginfo</class>
+      			<class>com.hejiascm.domain.Users</class>
+				<class>com.hejiascm.domain.Participant</class>
+				<class>com.hejiascm.domain.Tradecontractattachment</class>
+				<class>com.hejiascm.domain.Tradecontract</class>
+				<class>com.hejiascm.domain.Term</class>
+				<class>com.hejiascm.domain.Bankaccountinfo</class>
+				<class>com.hejiascm.domain.Orderattachment</class>
+				<class>com.hejiascm.domain.Orginfoattachment</class>
+				<class>com.hejiascm.domain.Order</class>
+				<class>com.hejiascm.domain.Ordergoods</class>
+				<class>com.hejiascm.domain.Receivingattachment</class>
+				<class>com.hejiascm.domain.Receivinggoods</class>
+				<class>com.hejiascm.domain.Receivingrecord</class>
+				<class>com.hejiascm.domain.Operation</class>
+				<class>com.hejiascm.domain.Contractgoods</class>
+				<class>com.hejiascm.domain.Deliverygoods</class>
+				<class>com.hejiascm.domain.Deliveryrecord</class>
+				<class>com.hejiascm.domain.Deliveryattachment</class>
+				<class>com.hejiascm.domain.Roles</class>
+				<class>com.hejiascm.domain.Permissions</class>
+				<class>com.hejiascm.domain.Bankaccountentry</class>
+   			<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		</persistence-unit>	
+</persistence>

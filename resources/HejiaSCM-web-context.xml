@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:security="http://www.springframework.org/schema/security" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans       http://www.springframework.org/schema/beans/spring-beans-4.3.xsd      http://www.springframework.org/schema/aop       http://www.springframework.org/schema/aop/spring-aop-4.3.xsd      http://www.springframework.org/schema/tx      http://www.springframework.org/schema/tx/spring-tx-4.3.xsd      http://www.springframework.org/schema/context      http://www.springframework.org/schema/context/spring-context-4.3.xsd      http://www.springframework.org/schema/jee      http://www.springframework.org/schema/jee/spring-jee-4.3.xsd      http://www.springframework.org/schema/lang      http://www.springframework.org/schema/lang/spring-lang-4.3.xsd      http://www.springframework.org/schema/mvc      http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd      http://www.springframework.org/schema/security      http://www.springframework.org/schema/security/spring-security-3.2.xsd">	
+
+
+
+ 	
+ 	<!-- ******************************************************************** -->
+	<!-- Spring 3.0 configuration -->
+	<!-- ******************************************************************** -->
+ 	<mvc:annotation-driven>
+ 		<mvc:message-converters>
+	        <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+	            <property name="supportedMediaTypes">
+	                <list>
+	                    <value>application/json;charset=UTF-8</value>
+	                </list>
+	            </property>
+	        </bean>
+	    </mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<!-- Allows for mapping the DispatcherServlet to "/" by forwarding static resource requests to the container's default Servlet -->
+	<mvc:default-servlet-handler/>
+	
+	<!-- Alloww Cross Origin Access -->
+	<mvc:cors>
+
+		<!--  <mvc:mapping path="/**"
+			allowed-origins="http://localhost:8081, http://192.168.20.116"
+			allowed-methods="GET, PUT, POST"
+			allowed-headers="header1, header2, header3"
+			exposed-headers="header1, header2" allow-credentials="false"
+			max-age="123" />-->
+	
+		<mvc:mapping allowed-origins="http://localhost:3000" path="/**"/>
+		<mvc:mapping allowed-origins="*" path="/**" allowed-methods ="*"/>
+
+	</mvc:cors>
+	
+	<!-- ******************************************************************** -->
+	<!-- Mark bean transactions as annotation driven -->
+	<!-- ******************************************************************** -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+ 	<!-- ******************************************************************** -->
+	<!-- Register Multi Part Resolve -->
+	<!-- ******************************************************************** -->	
+	<!-- <bean id="multipartResolver" class="org.skyway.spring.util.web.binary.ModelBindingMultipartResolver" />-->
+	<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" id="viewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/pages/"/>
+	</bean>
+	<bean class="org.skyway.spring.util.viewresolution.UserAgentViewResolver" id="iPhoneUserAgentViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="agentSubstring" value="iPhone"/>
+        <property name="prefix" value="/WEB-INF/iphone/"/>
+        <property name="order" value="0"/>
+    </bean>
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+        <property name="maxUploadSize" value="20848820"/>
+    </bean>
+	
+	<!-- ******************************************************************** -->
+	<!-- Register Streamed Binary Content View -->
+	<!-- ******************************************************************** -->	
+	<bean class="org.skyway.spring.util.web.binary.ModelAttributeStreamer" id="streamedBinaryContentView"/>
+	
+	<!-- ******************************************************************** -->
+	<!-- Bean Name View Resolver used to Redirect to Beans by id, required by Binary Content View -->
+	<!-- ******************************************************************** -->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" id="beanNameViewResolver"/>
+	
+	<!--  <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/WEB-INF/pages/" />
+	</bean>-->
+
+	<!-- <bean id="iPhoneUserAgentViewResolver" class="org.skyway.spring.util.viewresolution.UserAgentViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="agentSubstring" value="iPhone" />
+        <property name="prefix" value="/WEB-INF/iphone/" />
+        <property name="order" value="0" />
+    </bean>-->
+
+	<bean class="org.skyway.spring.util.viewresolution.AbsolutePathViewResolver" id="webInfViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="order" value="-1"/>
+    </bean>
+    
+	<!-- ******************************************************************** -->
+	<!-- Scan for web layer annotated beans -->
+	<!-- ******************************************************************** -->
+	<context:component-scan base-package="com.hejiascm.web" scoped-proxy="interfaces"/>
+	<context:component-scan base-package="com.hejiascm.web.rest"/>
+	
+	<!-- bean for json convertor -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	   <property name="messageConverters">
+	       <list>
+	           <ref bean="jsonConverter"/>
+	   		   <!-- <ref bean="marshallingConverter" />
+	   		   <ref bean="atomConverter" />-->
+	       </list>
+	   </property>
+	</bean>
+ 
+	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" id="jsonConverter">
+	   <property name="supportedMediaTypes" value="application/json;charset=UTF-8" />
+	</bean>
+	
+</beans>
