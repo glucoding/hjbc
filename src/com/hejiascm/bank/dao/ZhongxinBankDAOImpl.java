@@ -37,9 +37,7 @@ public class ZhongxinBankDAOImpl implements BankDAO {
 
 		// add header
 		post.setHeader("Content-Type", "application/xml");
-		JAXBElement<BankTransferRequest> jaxbElement =  new JAXBElement( 
-	            new QName("stream"), BankTransferRequest.class, btr);
-		String xmlString = marshal(jaxbElement);
+		String xmlString = marshal(btr);
 		String result = null;
         
 		try {
@@ -61,7 +59,6 @@ public class ZhongxinBankDAOImpl implements BankDAO {
 		System.out.println(result);
 		GeneralBankResponse gbr = (GeneralBankResponse)unmarshal(result);
 
-		//GeneralBankResponse gbr = (GeneralBankResponse) jaxbElem.getValue();
 		System.out.println(gbr.getStatusText());
 		
 		return null;
@@ -71,10 +68,10 @@ public class ZhongxinBankDAOImpl implements BankDAO {
 		return marshaller.unmarshal(new StringSource(xmlString));
 	}
 	
-	public String marshal(JAXBElement<?> jaxbElement) {
+	public String marshal(Object o) {
 		try {
 				StringResult result = new StringResult();
-				marshaller.marshal(jaxbElement, result);
+				marshaller.marshal(o, result);
 				System.out.println(result.toString());
 				return result.toString();
 			} catch (Exception e) {
