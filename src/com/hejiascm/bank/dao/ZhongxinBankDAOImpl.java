@@ -2,7 +2,6 @@ package com.hejiascm.bank.dao;
 
 import java.io.IOException;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.http.HttpResponse;
@@ -36,11 +35,8 @@ public class ZhongxinBankDAOImpl implements BankDAO {
 		// add header
 		post.setHeader("Content-Type", "application/xml");
 		JAXBElement<BankTransferRequest> jaxbElement =  new JAXBElement( 
-	            new QName(BankTransferRequest.class.getSimpleName()), BankTransferRequest.class, btr);
-		//JAXBContext context = JAXBContext.newInstance(BankTransferRequest.class);
-		
+	            new QName("stream"), BankTransferRequest.class, btr);
 		String xmlString = marshal(jaxbElement);
-
         
 		try {
 	        StringEntity entity = new StringEntity(xmlString);
