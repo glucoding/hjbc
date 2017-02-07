@@ -108,4 +108,13 @@
 	   <property name="supportedMediaTypes" value="application/json;charset=UTF-8" />
 	</bean>
 	
+	<!-- bean for xml convertor -->
+	<bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="packagesToScan">
+			<list>
+				<!-- List of java packages that contain the jaxb generated classes -->
+				<value>com.hejiascm.bank.domain</value>
+			</list>
+		</property>
+	</bean>
 </beans>
