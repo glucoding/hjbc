@@ -12,7 +12,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 public abstract class MiscTool {
 	public static String getCurrentTime(){
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		return df.format(new Date());
 	}
 	
@@ -67,13 +67,15 @@ public abstract class MiscTool {
 		 DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		 String tspStr = ""; 
 		 tspStr = sdf.format(tsp); 
+		 System.out.println("timeStampToString:" + tspStr);
 		 return tspStr;
 	 }
 	 
 	 public static Timestamp stringToTimestamp(String str){
-		String pattern = "yyyy-MM-dd'T'HH:mm:ss.S'Z'";
+		String[] pattern = {"yyyy-MM-dd'T'HH:mm:ss'Z'","yyyy-MM-dd'T'HH:mm:ss.s'Z'"};
 		Date date = null;
 		try {
+			System.out.println(str);
 			date = DateUtils.parseDate(str, pattern);
 		} catch (ParseException e) {
 			e.printStackTrace();

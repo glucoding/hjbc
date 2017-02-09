@@ -125,13 +125,13 @@ public class BcDeliveryRecordDAOImpl implements BcDeliveryRecordDAO {
  				}   
  			}
  			dr.setId(drbc.getId());
- 			dr.setLastUpdateTime(drbc.getLastUpdateTime());
+ 			//dr.setLastUpdateTime(drbc.getLastUpdateTime());
  			dr.setName(drbc.getName());
  			dr.setNotes(drbc.getNotes());
  			dr.setOrderId(drbc.getOrderId());
  			dr.setStatus(drbc.getStatus());
- 			dr.setSubmitterId(drbc.getSubmitterId());
- 			dr.setSubmitTime(drbc.getSubmitTime());
+ 			//dr.setSubmitterId(drbc.getSubmitterId());
+ 			//dr.setSubmitTime(drbc.getSubmitTime());
  			
  			drs.add(dr);
 		}
@@ -202,28 +202,28 @@ public class BcDeliveryRecordDAOImpl implements BcDeliveryRecordDAO {
 		try {
 			String userName = "current user name";
 			DeliveryRecordProxy sdk = SdkFactory.instance.getDeliveryRecordProxy(userName);
-			deliveryId = sdk.submitDeliveryRecord(
-			        deliveryFormId,
-			        name,
-			        description,
-			        orderId,
-			        contractId,
-			        contractVersion,
-			        submitterId,
-			        buyerId,
-			        buyeeId,
-			        consignerId,
-			        consigneeId,
-			        consignerAddress,
-			        consigneeAddress,
-			        qualityRecordIds,
-			        properties,
-			        gbcs,
-			        amount,
-			        notes,
-			        status,
-			        atts,
-			        submitTime);
+//			deliveryId = sdk.submitDeliveryRecord(
+//			        deliveryFormId,
+//			        name,
+//			        description,
+//			        orderId,
+//			        contractId,
+//			        contractVersion,
+//			        submitterId,
+//			        buyerId,
+//			        buyeeId,
+//			        consignerId,
+//			        consigneeId,
+//			        consignerAddress,
+//			        consigneeAddress,
+//			        qualityRecordIds,
+//			        properties,
+//			        gbcs,
+//			        amount,
+//			        notes,
+//			        status,
+//			        atts,
+//			        submitTime);
 		} catch (BlockchainException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

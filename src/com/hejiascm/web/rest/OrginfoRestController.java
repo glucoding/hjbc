@@ -12,6 +12,7 @@ import com.hejiascm.domain.Orginfo;
 import com.hejiascm.domain.Orginfoattachment;
 import com.hejiascm.service.OrginfoService;
 import com.hejiascm.util.TimestampPropertyEditor;
+import com.ibm.crl.bc.hejia.sdk.organization.OrgRegisterResponse;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -260,9 +261,8 @@ public class OrginfoRestController {
 	 */
 	@RequestMapping(value = "/bcOrginfo", method = RequestMethod.POST)
 	@ResponseBody
-	public Orginfo registerBcOrginfo(@RequestBody Orginfo orginfo) {
-		orginfoService.registerBcOrginfo(orginfo);
-		return bcOrginfoDAO.findBcOrginfoById(orginfo.getId());
+	public OrgRegisterResponse registerBcOrginfo(@RequestBody Orginfo orginfo) {
+		return bcOrginfoDAO.registerBcOrginfo(orginfo);
 	}
 
 	/**

@@ -440,10 +440,10 @@ public class TradecontractRestController {
 	 * @return List<Tradecontract>
 	 * 
 	 */
-	@RequestMapping(value = "/bcTradecontract/{id}/{version}", method = RequestMethod.GET)
+	@RequestMapping(value = "/bcTradecontract/{id}/{ver}/{maxTime}/{minTime}/{parId}", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Tradecontract> listBcTradecontracts(@PathVariable String id, @PathVariable String version) {
-		return bcTradeContractDAO.findBcContractById( id, version);
+	public List<Tradecontract> listBcTradecontracts(@PathVariable String id, @PathVariable String ver, @PathVariable String maxTime, @PathVariable String minTime, @PathVariable String parId) {
+		return bcTradeContractDAO.getTradeContracts(id, ver, maxTime, minTime, parId);
 	}
 	
 	/**
@@ -465,8 +465,6 @@ public class TradecontractRestController {
 	@RequestMapping(value = "/bcConfirmTradecontract/{id}/{ver}", method = RequestMethod.POST)
 	@ResponseBody
 	public void confirmBcTradecontract(@PathVariable String id, @PathVariable String ver) {
-		String opId = "get operator id here";
-		String opTime = MiscTool.timeStampToString(new Timestamp(System.currentTimeMillis()));
-		bcTradeContractDAO.confirmBcTradeContract(id, ver, opId, opTime);
+		bcTradeContractDAO.confirmBcTradeContract(id, ver);
 	}
 }

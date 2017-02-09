@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.hejiascm.domain.Orginfo;
+import com.ibm.crl.bc.hejia.sdk.organization.OrgRegisterResponse;
 
 public interface BcOrgInfoDAO {
 	public List<Orginfo> findBcSummaryOrginfos();
@@ -13,7 +14,7 @@ public interface BcOrgInfoDAO {
 	
 	public Orginfo findBcOrginfoById(String id);
 	
-	public void registerBcOrginfo(Orginfo org);
+	public OrgRegisterResponse registerBcOrginfo(Orginfo org);
 	
 	public void deactivateBcOrg(String id);
 }

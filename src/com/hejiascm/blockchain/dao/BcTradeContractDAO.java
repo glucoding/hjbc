@@ -10,11 +10,11 @@ public interface BcTradeContractDAO {
 	
 	public List<Tradecontract> findAllBcContracts();
 	
-	public List<Tradecontract> findBcContractById(String id, String ver);
+	public List<Tradecontract> getTradeContracts(String id, String ver, String maxTime, String minTime, String parId);
 	
 	public String submitBcContract(Tradecontract tc);
 
-	public void confirmBcTradeContract(String id, String ver, String opid, String opTime);
+	public void confirmBcTradeContract(String id, String ver);
 	
 	public String reviseBcContract(String id);
 	

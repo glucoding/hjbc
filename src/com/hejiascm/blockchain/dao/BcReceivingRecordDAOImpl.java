@@ -87,23 +87,23 @@ public class BcReceivingRecordDAOImpl implements BcReceivingRecordDAO {
 			try {
 				String userName = "current user name";
 				ReceivingRecordProxy sdk = SdkFactory.instance.getReceivingRecordProxy(userName);
-				receivingId = sdk.submitReceivingRecord(
-				        receivingFormId,
-				        deliveryRecordId,
-				        orderId,
-				        contractId,
-				        contractVersion,
-				        submitterId,
-				        name,
-				        description,
-				        qualityRecordIds,
-				        properties,
-				        rgbcs,
-				        amount,
-				        notes,
-				        status,
-				        atts,
-				        submitTime);
+//				receivingId = sdk.submitReceivingRecord(
+//				        receivingFormId,
+//				        deliveryRecordId,
+//				        orderId,
+//				        contractId,
+//				        contractVersion,
+//				        submitterId,
+//				        name,
+//				        description,
+//				        qualityRecordIds,
+//				        properties,
+//				        rgbcs,
+//				        amount,
+//				        notes,
+//				        status,
+//				        atts,
+//				        submitTime);
 			} catch (BlockchainException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -204,13 +204,13 @@ public class BcReceivingRecordDAOImpl implements BcReceivingRecordDAO {
  				}   
  			}
  			rr.setId(rrbc.getId());
- 			rr.setLastUpdateTime(rrbc.getLastUpdateTime());
+ 			//rr.setLastUpdateTime(rrbc.getLastUpdateTime());
  			rr.setName(rrbc.getName());
  			rr.setNotes(rrbc.getNotes());
  			rr.setOrderId(rrbc.getOrderId());
  			rr.setStatus(rrbc.getStatus());
  			rr.setSubmitterId(rrbc.getSubmitterId());
- 			rr.setSubmitTime(rrbc.getSubmitTime());
+ 			//rr.setSubmitTime(rrbc.getSubmitTime());
  			
  			rrs.add(rr);
 		}

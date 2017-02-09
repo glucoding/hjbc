@@ -11,10 +11,9 @@ import org.apache.commons.lang3.time.DateUtils;
 
 public class TimestampPropertyEditor extends PropertyEditorSupport {
 
-	private String pattern = "yyyy-MM-dd'T'HH:mm:ss.S'Z'";
+	private String pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-	private String[] formater_pattern = new String[] { "yyyy-MM-dd'T'HH:mm:ss.S'Z'",
-			"yyyy-MM-dd'T'HH:mm:ss'Z'" };
+	//private String[] formater_pattern = new String[] {"yyyy-MM-dd'T'HH:mm:ss'Z'"};
 
 	/**
 	 * 
@@ -39,10 +38,11 @@ public class TimestampPropertyEditor extends PropertyEditorSupport {
 			setValue(null);
 		} else {
 			try {
-				Date date = DateUtils.parseDate(text, formater_pattern);
+				Date date = DateUtils.parseDate(text, pattern);
 				Timestamp timestamp = new Timestamp(date.getTime());
 				//				设置转换完的值
 				setValue(timestamp);
+				System.out.println("Property editor did:" + timestamp.toString());
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -68,6 +68,7 @@ public class TimestampPropertyEditor extends PropertyEditorSupport {
 			try {
 				Date date = new Date(value.getTime());
 				String str = DateFormatUtils.format(date, pattern);
+				System.out.println("Property editor get did:" + str);
 				return str;
 			} catch (Exception e) {
 				return "";

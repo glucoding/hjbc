@@ -236,12 +236,97 @@ public class Orginfo implements Serializable {
 	String mobile;
 	/**
 	 */
-
+	
 	@Column(name = "password")
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
 	String password;
 	
+	@Column(name = "orgCat")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String orgCat;
+	
+	@Column(name = "invitingMobile")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String invitingMobile;
+	
+	@Column(name = "authCode")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String authCode;
+
+	@Column(name = "mobileAuthCode")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String mobileAuthCode;
+	
+	@Column(name = "orgCodeTerm")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String orgCodeTerm;
+	
+	@Column(name = "openApprovAuthNum")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String openApprovAuthNum;
+	
+	@Column(name = "orgTrustCode")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String orgTrustCode;
+	
+	@Column(name = "repCerType")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String repCerType;
+	
+	@Column(name = "repCerNum")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String repCerNum;
+	
+	@Column(name = "repCerTerm")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String repCerTerm;
+	
+	@Column(name = "agentName")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String agentName;
+	
+	@Column(name = "agentType")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String agentType;
+	
+	@Column(name = "agentCerNum")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String agentCerNum;
+	
+	@Column(name = "agentCerTerm")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String agentCerTerm;
+	
+	@Column(name = "agentEmail")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String agentEmail;
+	
+	@Column(name = "regAddr")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String regAddr;
+	
+	@Column(name = "comAddr")
+	@Basic(fetch = FetchType.EAGER)
+	@XmlElement
+	String comAddr;
+
 	@Column(name = "iniSubTime", nullable = true)
 	@Basic(fetch = FetchType.EAGER)
 	@XmlElement
@@ -616,6 +701,142 @@ public class Orginfo implements Serializable {
 	public Timestamp getQuitTime() {
 		return this.quitTime;
 	}
+	
+	public String getOrgCat() {
+		return orgCat;
+	}
+
+	public void setOrgCat(String orgCat) {
+		this.orgCat = orgCat;
+	}
+
+	public String getInvitingMobile() {
+		return invitingMobile;
+	}
+
+	public void setInvitingMobile(String invitingMobile) {
+		this.invitingMobile = invitingMobile;
+	}
+
+	public String getAuthCode() {
+		return authCode;
+	}
+
+	public void setAuthCode(String authCode) {
+		this.authCode = authCode;
+	}
+
+	public String getMobileAuthCode() {
+		return mobileAuthCode;
+	}
+
+	public void setMobileAuthCode(String mobileAuthCode) {
+		this.mobileAuthCode = mobileAuthCode;
+	}
+
+	public String getOrgCodeTerm() {
+		return orgCodeTerm;
+	}
+
+	public void setOrgCodeTerm(String orgCodeTerm) {
+		this.orgCodeTerm = orgCodeTerm;
+	}
+
+	public String getOpenApprovAuthNum() {
+		return openApprovAuthNum;
+	}
+
+	public void setOpenApprovAuthNum(String openApprovAuthNum) {
+		this.openApprovAuthNum = openApprovAuthNum;
+	}
+
+	public String getOrgTrustCode() {
+		return orgTrustCode;
+	}
+
+	public void setOrgTrustCode(String orgTrustCode) {
+		this.orgTrustCode = orgTrustCode;
+	}
+
+	public String getRepCerType() {
+		return repCerType;
+	}
+
+	public void setRepCerType(String repCerType) {
+		this.repCerType = repCerType;
+	}
+
+	public String getRepCerNum() {
+		return repCerNum;
+	}
+
+	public void setRepCerNum(String repCerNum) {
+		this.repCerNum = repCerNum;
+	}
+
+	public String getRepCerTerm() {
+		return repCerTerm;
+	}
+
+	public void setRepCerTerm(String repCerTerm) {
+		this.repCerTerm = repCerTerm;
+	}
+
+	public String getAgentName() {
+		return agentName;
+	}
+
+	public void setAgentName(String agentName) {
+		this.agentName = agentName;
+	}
+
+	public String getAgentType() {
+		return agentType;
+	}
+
+	public void setAgentType(String agentType) {
+		this.agentType = agentType;
+	}
+
+	public String getAgentCerNum() {
+		return agentCerNum;
+	}
+
+	public void setAgentCerNum(String agentCerNum) {
+		this.agentCerNum = agentCerNum;
+	}
+
+	public String getAgentCerTerm() {
+		return agentCerTerm;
+	}
+
+	public void setAgentCerTerm(String agentCerTerm) {
+		this.agentCerTerm = agentCerTerm;
+	}
+
+	public String getAgentEmail() {
+		return agentEmail;
+	}
+
+	public void setAgentEmail(String agentEmail) {
+		this.agentEmail = agentEmail;
+	}
+
+	public String getRegAddr() {
+		return regAddr;
+	}
+
+	public void setRegAddr(String regAddr) {
+		this.regAddr = regAddr;
+	}
+
+	public String getComAddr() {
+		return comAddr;
+	}
+
+	public void setComAddr(String comAddr) {
+		this.comAddr = comAddr;
+	}
 
 	/**
 	 */
@@ -654,6 +875,23 @@ public class Orginfo implements Serializable {
 		setQuitTime(that.getQuitTime());
 		setOrginfoattachments(new java.util.LinkedHashSet<com.hejiascm.domain.Orginfoattachment>(that.getOrginfoattachments()));
 		setBankaccountinfos(new java.util.LinkedHashSet<com.hejiascm.domain.Bankaccountinfo>(that.getBankaccountinfos()));
+		setOrgCat(that.getOrgCat());
+		setInvitingMobile(that.getInvitingMobile());
+		setAuthCode(that.getAuthCode());
+		setMobileAuthCode(that.getMobileAuthCode());
+		setOrgCodeTerm(that.getOrgCodeTerm());
+		setOpenApprovAuthNum(that.getOpenApprovAuthNum());
+		setOrgTrustCode(that.getOrgTrustCode());
+		setRepCerType(that.getRepCerType());
+		setRepCerNum(that.getRepCerNum());
+		setRepCerTerm(that.getRepCerTerm());
+		setAgentName(that.getAgentName());
+		setAgentType(that.getAgentType());
+		setAgentCerNum(that.getAgentCerNum());
+		setAgentCerTerm(that.getAgentCerTerm());
+		setAgentEmail(that.getAgentEmail());
+		setRegAddr(that.getRegAddr());
+		setComAddr(that.getComAddr());
 	}
 
 	/**
@@ -689,6 +927,23 @@ public class Orginfo implements Serializable {
 		buffer.append("iniSubTime=[").append(iniSubTime).append("] ");
 		buffer.append("approveTime=[").append(approveTime).append("] ");
 		buffer.append("quitTime=[").append(quitTime).append("] ");
+		buffer.append("orgCat=[").append(orgCat).append("] ");
+		buffer.append("invitingMobile=[").append(invitingMobile).append("] ");
+		buffer.append("authCod=[").append(authCode).append("] ");
+		buffer.append("mobileAuthCode=[").append(mobileAuthCode).append("] ");
+		buffer.append("orgCodeTerm=[").append(orgCodeTerm).append("] ");
+		buffer.append("openApprovAuthNum=[").append(openApprovAuthNum).append("] ");
+		buffer.append("orgTrustCode=[").append(orgTrustCode).append("] ");
+		buffer.append("repCerType=[").append(repCerType).append("] ");
+		buffer.append("repCerNum=[").append(repCerNum).append("] ");
+		buffer.append("repCerTerm=[").append(repCerTerm).append("] ");
+		buffer.append("agentName=[").append(agentName).append("] ");
+		buffer.append("agentType=[").append(agentType).append("] ");
+		buffer.append("agentCerNum=[").append(agentCerNum).append("] ");
+		buffer.append("agentCerTerm=[").append(agentCerTerm).append("] ");
+		buffer.append("agentEmail=[").append(agentEmail).append("] ");
+		buffer.append("regAddr=[").append(regAddr).append("] ");
+		buffer.append("comAddr=[").append(comAddr).append("] ");
 
 		return buffer.toString();
 	}

@@ -28,7 +28,7 @@ import com.ibm.crl.bc.hejia.sdk.logistics.OrderProxy;
 
 @Component("BcOrderDAO")
 public class BcOrderDAOImpl implements BcOrderDAO {
-	private ObjectMapper mapper = new ObjectMapper(); ;
+	private ObjectMapper mapper = new ObjectMapper(); 
 	
 	@Override
 	public String submitBcOrder(Order o) {
