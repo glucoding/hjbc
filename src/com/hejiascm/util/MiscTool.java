@@ -16,6 +16,14 @@ public abstract class MiscTool {
 		return df.format(new Date());
 	}
 	
+	public static String removeISOTime(String iso){
+		if(iso != null){
+			return iso.substring(0, 9);
+		}else{
+			return "0000-00-00";
+		}
+	}
+	
 	public static String getLocalHostName() {
 	    String hostName;
 	    try {
@@ -79,6 +87,7 @@ public abstract class MiscTool {
 			date = DateUtils.parseDate(str, pattern);
 		} catch (ParseException e) {
 			e.printStackTrace();
+			return null;
 		}
 		 return new Timestamp(date.getTime());
 	 }

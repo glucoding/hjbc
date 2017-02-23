@@ -1,7 +1,9 @@
 package com.hejiascm.util; 
 
 import java.io.FileInputStream;  
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;  
+import java.io.IOException;
 import java.io.OutputStream;  
 import java.security.MessageDigest;  
 import java.security.NoSuchAlgorithmException;  
@@ -36,6 +38,7 @@ public abstract class EncodeTool {
         byte[] digest = null; 
         FileInputStream fis = null;  
         FileOutputStream fos = null;  
+
         try {  
             MessageDigest md = MessageDigest.getInstance(algorithm);  
             fis = new FileInputStream(filename);  
@@ -49,9 +52,12 @@ public abstract class EncodeTool {
             encodedStream.write(digest);  
             encodedStream.flush();  
             encodedStream.close();  
-        } catch (Exception e) {  
+        } catch (FileNotFoundException e) {  
             System.out.println("Error computing Digest: " + e);  
-        } finally {  
+            return "upload fail: no file found";
+        } catch(Exception e){
+        	e.printStackTrace();
+        }finally {  
             try {  
                 if (fis != null)  
                     fis.close();  

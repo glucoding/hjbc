@@ -10,6 +10,7 @@ public class LoginResultWrapper {
 	private String orgName;
 	private List<String> roleNames;
 	private String authcode;
+	private int orgRole;
 	
 	public String getUserid() {
 		return userid;
@@ -53,6 +54,13 @@ public class LoginResultWrapper {
 	}
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+	
+	public int getOrgRole() {
+		return orgRole;
+	}
+	public void setOrgRole(int orgRole) {
+		this.orgRole = orgRole;
 	}
 	
 }
