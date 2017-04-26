@@ -1,16 +1,15 @@
 package com.hejiascm.web.rest;
 
-import com.hejiascm.blockchain.BcOrderDAO;
-import com.hejiascm.domain.Order;
-import com.hejiascm.domain.Orderattachment;
-import com.hejiascm.domain.Ordergoods;
-import com.hejiascm.domain.Tradecontract;
+import com.hejiascm.blockchain.interfaces.OrderDAO;
 import com.hejiascm.util.MiscTool;
+import com.ibm.crl.bc.hejia.sdk.logistics.Order;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("OrderRestController")
 public class OrderRestController {
 	@Autowired
-	private BcOrderDAO bcOrderDAO;
+	private OrderDAO orderDAO;
 
 	/**
 	 * Register custom, context-specific property editors
@@ -56,10 +55,16 @@ public class OrderRestController {
 	 * @return List<Order>
 	 * 
 	 */
-	@RequestMapping(value = "/bcOrder/{id}/{orderFormId}/{contractId}/{contractVersion}/{orgId}/{status}", method = RequestMethod.GET)
+	@RequestMapping(value = "/bcOrder/query", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Order> listBcOrders(@PathVariable String id, @PathVariable String orderFormId, @PathVariable String contractId, @PathVariable String contractVersion, @PathVariable String orgId, @PathVariable String status) {
-		return bcOrderDAO.getBcOrders(id, orderFormId, contractId, contractVersion, orgId, status);
+	public List<Order> getOrders(@RequestBody QueryObject q, HttpServletRequest req, HttpServletResponse res) {
+		List<Order> orders = orderDAO.getOrders(q.getQ().replaceAll("\'", "\""), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(orders != null){
+			return orders;
+		}else{
+			//res.setStatus(499);
+			return new ArrayList<Order>();
+		}
 	}
 	
 	/**
@@ -69,8 +74,14 @@ public class OrderRestController {
 	 */
 	@RequestMapping(value = "/bcOrder", method = RequestMethod.POST)
 	@ResponseBody
-	public void newBcTradeOrder(@RequestBody Order order) {
-		bcOrderDAO.submitBcOrder(order);
+	public String newBcTradeOrder(@RequestBody Order o, HttpServletRequest req, HttpServletResponse res) {
+		String result = orderDAO.submitOrder(o, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(result != null){
+			return result;
+		}else{
+			res.setStatus(499);
+			return "合同创建失败";
+		}
 	}
 	
 	/**
@@ -80,7 +91,13 @@ public class OrderRestController {
 	 */
 	@RequestMapping(value = "/bcConfirmOrder/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public void confirmBcTradecontract(@PathVariable String id) {
-		bcOrderDAO.confirmBcOrder(id);
+	public void confirmOrder(@PathVariable String id, HttpServletRequest req, HttpServletResponse res) {
+		orderDAO.confirmOrder(id, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "/bcOrder/reject/{id}", method = RequestMethod.POST)
+	@ResponseBody
+	public void rejectOrder(@PathVariable String id,@RequestBody RemarkObject r, HttpServletRequest req, HttpServletResponse res) {
+		orderDAO.rejectOrder(id, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 }

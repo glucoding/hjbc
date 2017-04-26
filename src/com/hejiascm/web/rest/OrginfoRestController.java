@@ -1,13 +1,20 @@
 package com.hejiascm.web.rest;
 
-import com.hejiascm.blockchain.BcOrgInfoDAO;
-import com.hejiascm.domain.Orginfo;
+import com.hejiascm.blockchain.interfaces.OrganizationDAO;
+import com.hejiascm.domains.org._OrgInfo;
+import com.hejiascm.util.MiscTool;
 import com.hejiascm.util.TimestampPropertyEditor;
+import com.ibm.crl.bc.hejia.sdk.common.DocStatus;
+import com.ibm.crl.bc.hejia.sdk.common.Property;
+import com.ibm.crl.bc.hejia.sdk.organization.OrgInfo;
 import com.ibm.crl.bc.hejia.sdk.organization.OrgRegisterResponse;
+import com.ibm.crl.bc.hejia.sdk.organization.OrgSummaryInfo;
+import com.ibm.crl.bc.hejia.sdk.organization.OrgUpdateRequest;
 
 import java.sql.Timestamp;
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -26,7 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("OrginfoRestController")
 public class OrginfoRestController {
 	@Autowired
-	private BcOrgInfoDAO bcOrginfoDAO;
+	private OrganizationDAO orgDAO;
 
 	/**
 	 * Register custom, context-specific property editors
@@ -52,10 +59,16 @@ public class OrginfoRestController {
 	 * Show all Orginfo entities from Block Chain
 	 * 
 	 */
-	@RequestMapping(value = "/bcOrginfo", method = RequestMethod.GET)
+	@RequestMapping(value = "/bcOrgInfo/query", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Orginfo> listBcOrginfos() {
-		return bcOrginfoDAO.findAllBcOrginfos();
+	public OrgInfo[] getOrgs(@RequestBody QueryObject q, HttpServletResponse response) {
+		OrgInfo[] orgs = orgDAO.getOrgs(q.getQ().replaceAll("\'", "\""));
+		if(orgs != null){
+			return orgs;
+		}else{
+			//response.setStatus(499);
+			return new OrgInfo[0];
+		}
 	}
 	
 	/**
@@ -65,8 +78,14 @@ public class OrginfoRestController {
 	 */
 	@RequestMapping(value = "/bcSumOrgs", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Orginfo> listBcSumOrgs() {
-		return new java.util.ArrayList<Orginfo>(bcOrginfoDAO.findBcSummaryOrginfos());
+	public OrgSummaryInfo[] getSumOrgs(HttpServletResponse response) {
+		OrgSummaryInfo[] osum = orgDAO.getOrgList();
+		if(osum != null){
+			return osum;
+		}else{
+			//response.setStatus(499);
+			return new OrgSummaryInfo[0];
+		}
 	}
 	
 	/**
@@ -75,10 +94,16 @@ public class OrginfoRestController {
 	 * @param orginfo
 	 * @return Orginfo
 	 */
-	@RequestMapping(value = "/bcOrginfo", method = RequestMethod.POST)
+	@RequestMapping(value = "/bcOrgInfo", method = RequestMethod.POST)
 	@ResponseBody
-	public OrgRegisterResponse registerBcOrginfo(@RequestBody Orginfo orginfo) {
-		return bcOrginfoDAO.registerBcOrginfo(orginfo);
+	public OrgRegisterResponse registerBcOrginfo(@RequestBody _OrgInfo org, HttpServletResponse response) {
+		OrgRegisterResponse ores = orgDAO.register(org);
+		if(ores != null){
+			return ores;
+		}else{
+			//response.setStatus(499);
+			return null;
+		}
 	}
 
 	/**
@@ -86,10 +111,16 @@ public class OrginfoRestController {
 	 * @param id
 	 * @return Orginfo
 	 */
-	@RequestMapping(value = "/bcOrginfo/{orginfo_id}", method = RequestMethod.GET, produces="application/json;charset=UTF-8")
+	@RequestMapping(value = "/bcOrgInfoById/{id}", method = RequestMethod.GET, produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public Orginfo loadBcOrginfoById(@PathVariable String orginfo_id) {
-		return bcOrginfoDAO.findBcOrginfoById(orginfo_id);
+	public _OrgInfo getById(@PathVariable String id, HttpServletResponse response) {
+		_OrgInfo o = orgDAO.getOrgById(id);
+		if(o != null){
+			return o;
+		}else{
+			//response.setStatus(499);
+			return null;
+		}
 	}
 	
 	/**
@@ -97,9 +128,84 @@ public class OrginfoRestController {
 	 * Deactivate an existing Orginfo entity
 	 * @param Organization id
 	 */
-	@RequestMapping(value = "/bcOrginfo/{orginfo_id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/bcOrgInfo/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public void deActivateOrginfo(@PathVariable String orginfo_id) {
-		bcOrginfoDAO.deactivateBcOrg(orginfo_id);
+	public void deActivate(@PathVariable String id) {
+		orgDAO.deActivate(id);
+	}
+	
+	@RequestMapping(value = "/bcOrgInfo/approveUpdate/{orgId}/{requestId}", method = RequestMethod.GET)
+	@ResponseBody
+	public void approveUpdate(@PathVariable String orgId, @PathVariable String requestId, HttpServletRequest req) {
+		orgDAO.approveUpdate(orgId, requestId, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "/bcOrgInfo/cancelUpdate/{requestId}", method = RequestMethod.GET)
+	@ResponseBody
+	public void cancelUpdate(@PathVariable String orgId, @PathVariable String requestId, HttpServletRequest req) {
+		orgDAO.cancelUpdate(requestId, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "/bcOrgInfo/getAllUpdateRequest", method = RequestMethod.GET)
+	@ResponseBody
+	public OrgUpdateRequest[] getAllUpdateRequest(HttpServletRequest req, HttpServletResponse response) {
+		OrgUpdateRequest[] ours = orgDAO.getAllUpdateRequest( MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(ours != null){
+			return ours;
+		}else{
+			return new OrgUpdateRequest[0];
+		}
+	}
+	
+	@RequestMapping(value = "/bcOrgInfo/getMyUpdateRequest", method = RequestMethod.GET)
+	@ResponseBody
+	public OrgUpdateRequest[] getMyUpdateRequest(HttpServletRequest req, HttpServletResponse response) {
+		OrgUpdateRequest[] ours = orgDAO.getMyUpdateRequests(DocStatus.ALL, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		System.out.println("The udpate retrieving request received");
+		if(ours != null){
+			return ours;
+		}else{
+			return new OrgUpdateRequest[0];
+		}
+	}
+	
+	@RequestMapping(value = "/bcOrgInfo/leave/{orgId}", method = RequestMethod.POST)
+	@ResponseBody
+	public void leave(@PathVariable String orgId, @RequestBody RemarkObject r, HttpServletRequest req) {
+		orgDAO.leave(orgId, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "/bcOrgInfo/rejectUpdate/{orgId}/{requestId}", method = RequestMethod.GET)
+	@ResponseBody
+	public void rejectUdpate(@PathVariable String orgId, @PathVariable String requestId, HttpServletRequest req) {
+		orgDAO.rejectUpdate(orgId, requestId, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "/bcOrgInfo/submitUpdateRequest/{orgId}", method = RequestMethod.POST)
+	@ResponseBody
+	public OrgUpdateRequest submitUpdateRequest(@PathVariable String orgId, @RequestBody  _OrgInfo orgInfo, HttpServletRequest req, HttpServletResponse response) {
+		OrgUpdateRequest our = orgDAO.submitUpdateRequest(orgId, MiscTool.getCurrentTime(), orgInfo,  MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(our != null){
+			return our;
+		}else{
+			return null;
+		}
+	}
+	
+	@RequestMapping(value = "/bcOrgInfo/update/{orgId}", method = RequestMethod.POST)
+	@ResponseBody
+	public void update(@PathVariable String orgId, @RequestBody Properties props, HttpServletRequest req) {
+		orgDAO.update(orgId, props.getProps(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "/bcOrgInfo/getUpdateRequestById/{requestId}", method = RequestMethod.GET)
+	@ResponseBody
+	public OrgUpdateRequest getUpdateRequestById(@PathVariable String requestId, HttpServletRequest req, HttpServletResponse response) {
+		OrgUpdateRequest our = orgDAO.getUpdateRequestById(requestId,  MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(our != null){
+			return our;
+		}else{
+			return null;
+		}
 	}
 }

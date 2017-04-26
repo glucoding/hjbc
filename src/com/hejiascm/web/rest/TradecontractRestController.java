@@ -1,13 +1,16 @@
 package com.hejiascm.web.rest;
 
-import com.hejiascm.blockchain.BcTradeContractDAO;
-import com.hejiascm.domain.Tradecontract;
+import com.hejiascm.blockchain.interfaces.ContractDAO;
+import com.hejiascm.domains.tradecontract._TradeContract;
+import com.hejiascm.util.MiscTool;
 import com.hejiascm.util.TimestampPropertyEditor;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("TradecontractRestController")
 public class TradecontractRestController {
 	@Autowired
-	private BcTradeContractDAO bcTradeContractDAO;
+	private ContractDAO contractDAO;
 
 	/**
 	 * Register custom, context-specific property editors
@@ -53,10 +56,17 @@ public class TradecontractRestController {
 	 * @return List<Tradecontract>
 	 * 
 	 */
-	@RequestMapping(value = "/bcTradecontract/{id}/{ver}/{maxTime}/{minTime}/{parId}/{exeStatus}/{changeStatus}/{orgId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/bcTradeContract/query", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Tradecontract> listBcTradecontracts(@PathVariable String id, @PathVariable String ver, @PathVariable String maxTime, @PathVariable String minTime, @PathVariable String parId, @PathVariable String exeStatus, @PathVariable String changeStatus, @PathVariable String orgId) {
-		return bcTradeContractDAO.getTradeContracts(id, ver, maxTime, minTime, parId, exeStatus, changeStatus, orgId);
+	public List<_TradeContract> getContracts(@RequestBody QueryObject q, HttpServletRequest req, HttpServletResponse res) {
+		System.out.println(q.getQ());
+		List<_TradeContract> cons = contractDAO.getTradeContracts(q.getQ().replaceAll("\'", "\""), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(cons != null){
+			return cons;
+		}else{
+			//res.setStatus(499);
+			return new ArrayList<_TradeContract>();
+		}
 	}
 	
 	/**
@@ -64,10 +74,16 @@ public class TradecontractRestController {
 	 * @param Tradecontract
 	 * @return String contractId
 	 */
-	@RequestMapping(value = "/bcTradecontract", method = RequestMethod.POST)
+	@RequestMapping(value = "/bcTradeContract", method = RequestMethod.POST)
 	@ResponseBody
-	public void newBcTradecontract(@RequestBody Tradecontract tradecontract) {
-		bcTradeContractDAO.submitBcContract(tradecontract);
+	public String newBcTradecontract(@RequestBody _TradeContract contract, HttpServletRequest req, HttpServletResponse res) {
+		String result = contractDAO.submitTradeContract(contract, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(result != null){
+			return result;
+		}else{
+			res.setStatus(499);
+			return "合同创建失败，请联系系统管理员";
+		}
 	}
 	
 	/**
@@ -75,9 +91,15 @@ public class TradecontractRestController {
 	 * @param Tradecontract
 	 * @return String contractId
 	 */
-	@RequestMapping(value = "/bcConfirmTradecontract/{id}/{ver}", method = RequestMethod.POST)
+	@RequestMapping(value = "/bcConfirmTradeContract/{id}/{ver}", method = RequestMethod.POST)
 	@ResponseBody
-	public void confirmBcTradecontract(@PathVariable String id, @PathVariable String ver) {
-		bcTradeContractDAO.confirmBcTradeContract(id, ver);
+	public void confirmBcTradecontract(@PathVariable String id, @PathVariable String ver, HttpServletRequest req, HttpServletResponse res) {
+		contractDAO.confirmTradeContract(id, ver.replaceAll("_", "."), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "/bcTradeContract/reject/{id}/{ver}", method = RequestMethod.POST)
+	@ResponseBody
+	public void rejectContract(@PathVariable String id, @PathVariable String ver, @RequestBody RemarkObject r, HttpServletRequest req, HttpServletResponse res) {
+		contractDAO.rejectTradeContract(id, ver.replaceAll("_", "."), r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 }

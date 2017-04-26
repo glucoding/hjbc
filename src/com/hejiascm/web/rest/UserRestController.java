@@ -1,11 +1,13 @@
 package com.hejiascm.web.rest;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -15,17 +17,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.hejiascm.blockchain.BcUserDAO;
-import com.hejiascm.domain.Orginfo;
-import com.hejiascm.domain.User;
+import com.hejiascm.blockchain.interfaces.UserDAO;
+import com.hejiascm.domains.user._UserInfo;
+import com.hejiascm.util.MiscTool;
 import com.hejiascm.util.TimestampPropertyEditor;
-import com.ibm.crl.bc.hejia.sdk.organization.OrgRegisterResponse;
+import com.ibm.crl.bc.hejia.sdk.user.UserInfo;
 
 @Controller("UserRestController")
 public class UserRestController {
 	@Autowired
-	BcUserDAO bcUserDAO;
+	UserDAO userDAO;
 	/**
 	 * Register custom, context-specific property editors
 	 * 
@@ -53,10 +54,27 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/bcUser", method = RequestMethod.POST)
 	@ResponseBody
-	public void addUser(@RequestBody User u, HttpServletResponse res) {
-		int result = bcUserDAO.bcAdd(u);
-		if(result == 0){
-			res.setStatus(450);
+	public UserInfo addUser(@RequestBody _UserInfo u, HttpServletRequest request, HttpServletResponse response) {
+		UserInfo uinfo = userDAO.add(u, MiscTool.getBase64Name(request.getHeader("Authorization").trim()));
+		
+		if(uinfo!= null)
+			return uinfo;
+		else{
+			//response.setStatus(499);
+			return null;
+		}
+	}
+	
+	@RequestMapping(value = "/bcUser/update", method = RequestMethod.POST)
+	@ResponseBody
+	public UserInfo updateUser(@RequestBody _UserInfo u, HttpServletRequest request, HttpServletResponse response) {
+		UserInfo uinfo = userDAO.update(u, MiscTool.getBase64Name(request.getHeader("Authorization").trim()));
+		
+		if(uinfo!= null)
+			return uinfo;
+		else{
+			//response.setStatus(499);
+			return null;
 		}
 	}
 
@@ -67,8 +85,14 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/bcUser/{orgId}", method = RequestMethod.GET, produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public List<com.hejiascm.domain.User> loadAll(@PathVariable String orgId) {
-		return bcUserDAO.bcGetAll(orgId);
+	public _UserInfo[] loadAll(@PathVariable String orgId,  HttpServletRequest request, HttpServletResponse response) {
+		_UserInfo[] us = userDAO.getAll(orgId, MiscTool.getBase64Name(request.getHeader("Authorization").trim()) );
+		if(us!= null){
+			return us;
+		}else{
+			//response.setStatus(499);
+			return new _UserInfo[0];
+		}
 	}
 	
 	/**
@@ -78,7 +102,19 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/bcUser/{orgId}/{name}", method = RequestMethod.GET, produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public com.hejiascm.domain.User loadOne(@PathVariable String orgId, @PathVariable String name) {
-		return bcUserDAO.bcGetOne(orgId, name);
+	public _UserInfo loadOne(@PathVariable String orgId, @PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
+		_UserInfo u = userDAO.getOne(orgId, name, MiscTool.getBase64Name(request.getHeader("Authorization").trim()) );
+		if(u != null){
+			return u;
+		}else{
+			//response.setStatus(499);
+			return null;
+		}
+	}
+	
+	@RequestMapping(value = "/bcUser/{orgId}/{name}", method = RequestMethod.DELETE, produces="application/json;charset=UTF-8")
+	@ResponseBody
+	public void delUser(@PathVariable String orgId, @PathVariable String name, HttpServletRequest request) {
+		userDAO.delete(orgId, MiscTool.getBase64Email(name), MiscTool.getBase64Name(request.getHeader("Authorization").trim()));
 	}
 }

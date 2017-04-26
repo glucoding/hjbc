@@ -1,15 +1,15 @@
 package com.hejiascm.web.rest;
 
-import com.hejiascm.blockchain.BcReceivingRecordDAO;
-import com.hejiascm.domain.Deliveryrecord;
-import com.hejiascm.domain.Receivingattachment;
-import com.hejiascm.domain.Receivinggoods;
-import com.hejiascm.domain.Receivingrecord;
+import com.hejiascm.blockchain.interfaces.ReceivingRecordDAO;
+import com.hejiascm.domains.logistics._ReceivingRecord;
+import com.hejiascm.util.MiscTool;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("ReceivingrecordRestController")
 public class ReceivingrecordRestController {
 	@Autowired
-	private BcReceivingRecordDAO bcReceivingRecordDAO;
+	private ReceivingRecordDAO rrDAO;
 
 	/**
 	 * Register custom, context-specific property editors
@@ -55,10 +55,17 @@ public class ReceivingrecordRestController {
 	 * @return Set<Receivingrecord>
 	 * 
 	 */
-	@RequestMapping(value = "/bcReceivingrecord/{id}/{contractId}/{contractVersion}/{orderId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/bcReceivingRecord/query", method = RequestMethod.POST)
 	@ResponseBody
-	public Set<Receivingrecord> listBcReceivingRecords(@PathVariable String id, @PathVariable String contractId, @PathVariable String contractVersion, @PathVariable String orderId) {
-		return bcReceivingRecordDAO.getBcReceivingRecords(id, contractId, contractVersion, orderId);
+	public List<_ReceivingRecord> getRecords(@RequestBody QueryObject q, HttpServletRequest req, HttpServletResponse res) {
+		List<_ReceivingRecord> records = rrDAO.getReceivingRecords(q.getQ().replaceAll("\'", "\""), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		System.out.println(q.getQ());
+		if(records != null){
+			return records;
+		}else{
+			//res.setStatus(499);
+			return new ArrayList<_ReceivingRecord>();
+		}
 	}
 	
 	/**
@@ -66,9 +73,15 @@ public class ReceivingrecordRestController {
 	 * @param Receivingrecord
 	 * @return String ReceivingRecordId
 	 */
-	@RequestMapping(value = "/bcReceivingrecord", method = RequestMethod.POST)
+	@RequestMapping(value = "/bcReceivingRecord", method = RequestMethod.POST)
 	@ResponseBody
-	public void newBcReceivingRecord(@RequestBody Receivingrecord rr) {
-		bcReceivingRecordDAO.submitBcReceivingRecord(rr);
+	public String submitRecord(@RequestBody _ReceivingRecord rr, HttpServletRequest req, HttpServletResponse res) {
+		String result = rrDAO.submitRecevingRecord(rr, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(result != null){
+			return result;
+		}else{
+			res.setStatus(499);
+			return "收货单创建失败";
+		}
 	}
 }

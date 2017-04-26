@@ -11,31 +11,6 @@
 			org.springframework.web.context.request.RequestContextListener
 		</listener-class>
   </listener>
-  <!--  <filter>
-    <description>generated-persistence-filter</description>
-    <filter-name>HJDBFilter</filter-name>
-    <filter-class>
-			org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter
-		</filter-class>
-    <init-param>
-      <param-name>entityManagerFactoryBeanName</param-name>
-      <param-value>HJDB</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>HJDBFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <filter>
-    <filter-name>shiroFilter</filter-name>
-    <filter-class>
-			org.springframework.web.filter.DelegatingFilterProxy
-		</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>shiroFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>-->
   <filter>
     <filter-name>characterEncodingFilter</filter-name>
     <filter-class>
@@ -64,7 +39,7 @@
       <param-name>contextConfigLocation</param-name>
       <param-value>
 				classpath:HejiaSCM-web-context.xml
-			</param-value>
+		</param-value>
     </init-param>
     <init-param>
       <param-name>dispatchOptionsRequest</param-name>

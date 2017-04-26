@@ -131,5 +131,12 @@
 	   <property name="supportedMediaTypes" value="application/json;charset=UTF-8" />
 	</bean>
 	
+	<bean class="com.hejiascm.util.InstantiationTracingBeanPostProcessor"/>
+	
+	<context:property-placeholder location="classpath:bc_environment.properties" ignore-unresolvable="true"/>
+	
+	<!--打开切面-->  
+	<aop:aspectj-autoproxy proxy-target-class="true"/> 
+	
 </beans>
 

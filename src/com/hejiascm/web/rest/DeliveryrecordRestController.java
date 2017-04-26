@@ -1,15 +1,15 @@
 package com.hejiascm.web.rest;
 
-import com.hejiascm.blockchain.BcDeliveryRecordDAO;
-import com.hejiascm.domain.Deliveryattachment;
-import com.hejiascm.domain.Deliverygoods;
-import com.hejiascm.domain.Deliveryrecord;
-import com.hejiascm.domain.Tradecontract;
+import com.hejiascm.blockchain.interfaces.DeliveryRecordDAO;
+import com.hejiascm.domains.logistics._DeliveryRecord;
+import com.hejiascm.util.MiscTool;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class DeliveryrecordRestController {
 	
 	@Autowired
-	private BcDeliveryRecordDAO bcDeliveryRecordDAO;
+	private DeliveryRecordDAO drDAO;
 
 	/**
 	 * Register custom, context-specific property editors
@@ -51,10 +51,16 @@ public class DeliveryrecordRestController {
 	 * @return Set<Deliveryrecord>
 	 * 
 	 */
-	@RequestMapping(value = "/bcDeliveryrecord/{id}/{contractId}/{contractVersion}/{orderId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/bcDeliveryRecord/query", method = RequestMethod.POST)
 	@ResponseBody
-	public Set<Deliveryrecord> listDeliveryRecords(@PathVariable String id, @PathVariable String contractId, @PathVariable String contractVersion, @PathVariable String orderId) {
-		return bcDeliveryRecordDAO.getBcDeliveryRecords(id, contractId, contractVersion, orderId);
+	public List<_DeliveryRecord> getRecords(@RequestBody QueryObject q, HttpServletRequest req, HttpServletResponse res) {
+		List<_DeliveryRecord> records = drDAO.getDeliveryRecords(q.getQ().replaceAll("\'", "\""), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(records != null){
+			return records;
+		}else{
+			//res.setStatus(499);
+			return new ArrayList<_DeliveryRecord>();
+		}
 	}
 	
 	/**
@@ -62,9 +68,15 @@ public class DeliveryrecordRestController {
 	 * @param Deliveryrecord
 	 * @return String deliveryRecordId
 	 */
-	@RequestMapping(value = "/bcDeliveryrecord", method = RequestMethod.POST)
+	@RequestMapping(value = "/bcDeliveryRecord", method = RequestMethod.POST)
 	@ResponseBody
-	public void newBcDeliveryRecord(@RequestBody Deliveryrecord dr) {
-		bcDeliveryRecordDAO.submitBcDeliveryRecord(dr);
+	public String submitRecord(@RequestBody _DeliveryRecord dr, HttpServletRequest req, HttpServletResponse res) {
+		String result = drDAO.submitDeliveryRecord(dr, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(result != null){
+			return result;
+		}else{
+			res.setStatus(499);
+			return "创建发货单失败";
+		}
 	}
 }

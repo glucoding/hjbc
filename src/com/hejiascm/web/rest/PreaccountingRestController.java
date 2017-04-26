@@ -1,9 +1,11 @@
 package com.hejiascm.web.rest;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,14 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hejiascm.blockchain.BcPreAccountingDAO;
-import com.hejiascm.domain.Preaccounting;
+import com.hejiascm.blockchain.interfaces.PreAccountingDAO;
+import com.hejiascm.util.MiscTool;
 import com.hejiascm.util.TimestampPropertyEditor;
+import com.ibm.crl.bc.hejia.sdk.accounting.PreAccounting;
 
 @Controller("PreaccountingRestController")
 public class PreaccountingRestController {
 	@Autowired
-	BcPreAccountingDAO bcPreAccountingDAO;
+	PreAccountingDAO paDAO;
 	/**
 	 * Register custom, context-specific property editors
 	 * 
@@ -47,22 +50,22 @@ public class PreaccountingRestController {
 	 * Show all Orginfo entities from Block Chain
 	 * 
 	 */
-	@RequestMapping(value = "/bcPreaccounting", method = RequestMethod.GET)
+	@RequestMapping(value = "/bcPreAccounting/query", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Preaccounting> listPreAccounting() {
-		return bcPreAccountingDAO.bcGetPreAccountings();
+	public List<PreAccounting> listPreAccounting(@RequestBody QueryObject q, HttpServletRequest req, HttpServletResponse res) {
+		List<PreAccounting> pres =  paDAO.getPreAccountings(q.getQ().replaceAll("\'", "\""), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(pres != null){
+			return pres;
+		}else{
+			//res.setStatus(499);
+			return new ArrayList<PreAccounting>();
+		}
 	}
 	
-	/**
-	 * Block chain(CU)
-	 * Register new organization or change the values of existing organization
-	 * @param orginfo
-	 * @return Orginfo
-	 */
-	@RequestMapping(value = "/bcPreaccounting", method = RequestMethod.POST)
+	@RequestMapping(value = "/bcPreAccounting/confirm/{preId}", method = RequestMethod.POST)
 	@ResponseBody
-	public void submitPreAccounting(@RequestBody Preaccounting pa) {
-		bcPreAccountingDAO.bcSubmitPreAccounting(pa);
+	public void confirmPreAccounting(@PathVariable String preId, @RequestBody RemarkObject r, HttpServletRequest req, HttpServletResponse res) {
+		paDAO.confirmPreAccounting(preId, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 	
 	/**
@@ -70,9 +73,15 @@ public class PreaccountingRestController {
 	 * Deactivate an existing Orginfo entity
 	 * @param Organization id
 	 */
-	@RequestMapping(value = "/bcPreaccounting/{preId}/{note}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/bcPreAccounting/withdraw/{preId}", method = RequestMethod.POST)
 	@ResponseBody
-	public void deletePreAccounting(@PathVariable String preId, @PathVariable String notes) {
-		bcPreAccountingDAO.bcWithdrawPreAccounting(preId, notes);
+	public void deletePreAccounting(@PathVariable String preId, @RequestBody RemarkObject r, HttpServletRequest req, HttpServletResponse res) {
+		paDAO.withdrawPreAccounting(preId, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "/bcPreAccounting/generate", method = RequestMethod.GET)
+	@ResponseBody
+	public void generate(HttpServletRequest req, HttpServletResponse res) {
+		paDAO.generatePreAccounting(MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 }

@@ -1,6 +1,6 @@
 package com.hejiascm.domains.common;
 
-import com.hejiascm.domain.Operation;
+import com.ibm.crl.bc.hejia.sdk.common.Operation;
 
 public class _Operation extends Operation {
 

@@ -1,5 +1,6 @@
 package com.hejiascm.util;
 
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -8,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.time.DateUtils;
 
 public abstract class MiscTool {
@@ -90,5 +92,21 @@ public abstract class MiscTool {
 			return null;
 		}
 		 return new Timestamp(date.getTime());
+	 }
+	 
+	 public static String getBase64Name(String s){
+		 String sub = null;
+		 for(int i =  0; i < s.length()-1; i++){
+			 if(s.charAt(i) == ' '){
+				 sub = s.substring(i);
+			 }
+		 }
+		 byte[] userBytes = Base64.decodeBase64(sub);
+			return new String(userBytes);
+	 }
+	 
+	 public static String getBase64Email(String s){
+		 byte[] userBytes = Base64.decodeBase64(s);
+		return new String(userBytes);
 	 }
 }
