@@ -114,7 +114,13 @@ public class UserRestController {
 	
 	@RequestMapping(value = "/bcUser/{orgId}/{name}", method = RequestMethod.DELETE, produces="application/json;charset=UTF-8")
 	@ResponseBody
-	public void delUser(@PathVariable String orgId, @PathVariable String name, HttpServletRequest request) {
-		userDAO.delete(orgId, MiscTool.getBase64Email(name), MiscTool.getBase64Name(request.getHeader("Authorization").trim()));
+	public String delUser(@PathVariable String orgId, @PathVariable String name, HttpServletRequest request, HttpServletResponse res) {
+		String result = userDAO.delete(orgId, MiscTool.getBase64Email(name), MiscTool.getBase64Name(request.getHeader("Authorization").trim()));
+		if(result.equals("删除失败，请联系管理员")){
+			res.setStatus(456);
+			return result;
+		}
+		return result;
+		
 	}
 }
