@@ -1,15 +1,21 @@
 package com.hejiascm.web.rest;
 
 import com.hejiascm.blockchain.interfaces.FinancingDAO;
+import com.hejiascm.domains.financing._FinancingExecution;
+import com.hejiascm.util.FatherToChildUtils;
 import com.hejiascm.util.MiscTool;
 import com.ibm.crl.bc.hejia.sdk.common.BankAccountInfo;
+import com.ibm.crl.bc.hejia.sdk.common.Currency;
 import com.ibm.crl.bc.hejia.sdk.common.TransferRecord;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingContract;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingExecution;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingIntention;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingRequest;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -192,6 +198,34 @@ public class FinancingRestController {
 			//res.setStatus(499);
 			return  null;
 		}
+	}
+	
+	@RequestMapping(value = "/bcFinancingExecution/queryWithoutHash", method = RequestMethod.POST)
+	@ResponseBody
+	public _FinancingExecution[] getExecutionsWithoutHash(@RequestBody QueryObject q, HttpServletRequest req, HttpServletResponse res) {
+		FinancingExecution[] fes = finDAO.getExecutions(q.getQ().replaceAll("\'", "\""), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		_FinancingExecution[] fesNew = new _FinancingExecution[fes.length];
+		int i = 0;
+		for(FinancingExecution fe:fes){
+			_FinancingExecution feNew = new _FinancingExecution();
+			FatherToChildUtils.fatherToChild(fe, feNew);
+			
+			HashMap<String, Currency> map = fe.getUnconfirmedRepayments();
+			Iterator iter = map.entrySet().iterator();
+			String[] ids = new String[map.size()];
+			int j = 0;
+			while (iter.hasNext()) {
+				Map.Entry<String,Currency> entry = (Map.Entry<String, Currency>) iter.next();
+				//Currency val = entry.getValue();
+				ids[j] =  entry.getKey();
+				j++;
+			}
+			feNew.setUnConfirmedRepaymentList(ids);
+			fesNew[i] = feNew;
+			i++;
+		}
+		
+		return fesNew;
 	}
 	
 	@RequestMapping(value = "/bcLoanRecord/{finConId}", method = RequestMethod.GET)

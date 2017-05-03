@@ -20,8 +20,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.ibm.crl.bc.hejia.app.GeneratorTask;
+import com.ibm.crl.bc.hejia.sdk.GlobalConf;
 import com.ibm.crl.bc.hejia.sdk.SdkFactory;
 import com.ibm.crl.bc.hejia.sdk.accounting.AccountingType;
 import com.ibm.crl.bc.hejia.sdk.accounting.PreAccountingProxy;
@@ -69,12 +71,13 @@ public class PreAccountingGeneratorTask extends GeneratorTask {
 	 */
 	public void generatePreAccounting() throws BlockchainException {
 		logger.info("Start generating PreAccounting @ [" + TimeConverter.getCurrentTimeInISOFormat() + "]");
-
+		logger.info(GlobalConf.getInstance().get(GlobalConf.REDIS_HOST));
 		PreAccountingProxy proxy = SdkFactory.getInstance().getPreAccountingProxy(getOperator());
 		Map<String, List<SingleAccountingApplication>> saas = getUnusedSingleAccountingApplicationsByOrders();
 		int i = 0;
 
 		for (String orderId : saas.keySet()) {
+			logger.info("Start generating PreAccounting @ [" + orderId + "] in outter loop");
 			List<String> singleAccountingApplicationIds = new ArrayList<String>();
 			String contractId = null;
 			Currency totalAmount = new Currency(0d, "CNY");
@@ -102,7 +105,21 @@ public class PreAccountingGeneratorTask extends GeneratorTask {
 				totalAmount.setCurrencyType(saa.getAmount().getCurrencyType());
 				totalAmount.setAmount(totalAmount.getAmount() + saa.getAmount().getAmount());
 				singleAccountingApplicationIds.add(saa.getId());
+				logger.info("add one singleAccountingApplication");
 			}
+			logger.info("Prepared to generate PreAccounting @ [" + TimeConverter.getCurrentTimeInISOFormat() + "]");
+			
+//			logger.info("Enter%%%%%%%%%%%%%%%%%%%");
+//			String s ;
+//			try{
+//				s = proxy.generateAccountingSerialNumber();
+//			}catch(Exception e){
+//				e.printStackTrace();
+//				s = UUID.randomUUID().toString();
+//			}
+//			logger.info("Exit%%%%%%%%%%%%%%%%%%%");
+
+			
 			String id = proxy.submitPreAccounting(proxy.generateAccountingSerialNumber(),contractId, AccountingType.NUM_ACCOUNTING, totalAmount, orderId,
 					buyerId, sellerId, goods.toArray(new Goods[0]),
 					singleAccountingApplicationIds.toArray(new String[]{}), notes, null);

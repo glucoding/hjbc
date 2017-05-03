@@ -122,6 +122,7 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 			_org.setAgentEmail(map.get("agentEmail"));
 			_org.setRegAddr(map.get("regAddr"));
 			_org.setComAddr(map.get("comAddr"));
+			_org.setFinanceGrantNo(map.get("financeGrantNo"));
 		}
 		return _org;
 	}
@@ -203,6 +204,7 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 				_org.setAgentEmail(map.get("agentEmail"));
 				_org.setRegAddr(map.get("regAddr"));
 				_org.setComAddr(map.get("comAddr"));
+				_org.setFinanceGrantNo(map.get("financeGrantNo"));
 			}
 			_orgs[i] = _org;
 			i++;
@@ -249,7 +251,8 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 				new Property("agentCerTerm", org.getAgentCerTerm()),
 				new Property("agentEmail", org.getAgentEmail()),
 				new Property("regAddr", org.getRegAddr()),
-				new Property("comAddr", org.getComAddr())
+				new Property("comAddr", org.getComAddr()),
+				new Property("financeGrantNo", org.getFinanceGrantNo())
 		};
 		
 		OrgRegisterResponse res = null;
@@ -343,6 +346,7 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 						oldOrg.setAgentEmail(map.get("agentEmail"));
 						oldOrg.setRegAddr(map.get("regAddr"));
 						oldOrg.setComAddr(map.get("comAddr"));
+						oldOrg.setFinanceGrantNo(map.get("financeGrantNo"));
 					}
 					our.setOldInfo(oldOrg);
 					
@@ -385,6 +389,7 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 						newOrg.setAgentEmail(map.get("agentEmail"));
 						newOrg.setRegAddr(map.get("regAddr"));
 						newOrg.setComAddr(map.get("comAddr"));
+						newOrg.setFinanceGrantNo(map.get("financeGrantNo"));
 					}
 					our.setNewInfo(newOrg);
 					ours[i++] = our;
@@ -454,6 +459,7 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 						oldOrg.setAgentEmail(map.get("agentEmail"));
 						oldOrg.setRegAddr(map.get("regAddr"));
 						oldOrg.setComAddr(map.get("comAddr"));
+						oldOrg.setFinanceGrantNo(map.get("financeGrantNo"));
 					}
 					our.setOldInfo(oldOrg);
 					
@@ -496,6 +502,7 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 						newOrg.setAgentEmail(map.get("agentEmail"));
 						newOrg.setRegAddr(map.get("regAddr"));
 						newOrg.setComAddr(map.get("comAddr"));
+						newOrg.setFinanceGrantNo(map.get("financeGrantNo"));
 					}
 					our.setNewInfo(newOrg);
 					ours[i++] = our;
@@ -554,7 +561,8 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 					new Property("agentCerTerm", org.getAgentCerTerm()),
 					new Property("agentEmail", org.getAgentEmail()),
 					new Property("regAddr", org.getRegAddr()),
-					new Property("comAddr", org.getComAddr())
+					new Property("comAddr", org.getComAddr()),
+					new Property("financeGrantNo", org.getFinanceGrantNo())
 			};
 			obc.setProperties(props);
 			obc.setAttachments(org.getAttachments());
@@ -644,6 +652,7 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 			oldOrg.setAgentEmail(map.get("agentEmail"));
 			oldOrg.setRegAddr(map.get("regAddr"));
 			oldOrg.setComAddr(map.get("comAddr"));
+			oldOrg.setFinanceGrantNo(map.get("financeGrantNo"));
 		}
 		our.setOldInfo(oldOrg);
 		
@@ -685,6 +694,7 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 			newOrg.setAgentEmail(map.get("agentEmail"));
 			newOrg.setRegAddr(map.get("regAddr"));
 			newOrg.setComAddr(map.get("comAddr"));
+			newOrg.setFinanceGrantNo(map.get("financeGrantNo"));
 		}
 		our.setNewInfo(newOrg);
 		
