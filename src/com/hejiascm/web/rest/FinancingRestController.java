@@ -272,7 +272,7 @@ public class FinancingRestController {
 			return frs;
 		}else{
 			//res.setStatus(499);
-			return  null;
+			return  new FinancingRequest[0];
 		}
 	}
 	
