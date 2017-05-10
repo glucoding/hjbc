@@ -89,7 +89,7 @@ public class FinancingRestController {
 	@RequestMapping(value = "/bcRepaymentRecord/confirm/{finConId}/{transferId}", method = RequestMethod.GET)
 	@ResponseBody
 	public void confirmRepaymentRecord(@PathVariable String finConId, @PathVariable String transferId, HttpServletRequest req) {
-		finDAO.confirmLoanRecord(finConId, transferId, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		finDAO.confirmRepaymentRecord(finConId, transferId.replaceAll("_", "#"), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 	
 	@RequestMapping(value = "/bcFinancingRequest/confirm/{requestId}", method = RequestMethod.POST)
