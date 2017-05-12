@@ -196,7 +196,7 @@ public class FinancingRestController {
 			return fes;
 		}else{
 			//res.setStatus(499);
-			return  null;
+			return  new FinancingExecution[0];
 		}
 	}
 	
@@ -248,7 +248,7 @@ public class FinancingRestController {
 			return trs;
 		}else{
 			//res.setStatus(499);
-			return  null;
+			return  new TransferRecord[0];
 		}
 	}
 	
