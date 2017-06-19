@@ -18,7 +18,7 @@ public class TriggerPreAccountingTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		generator = new PreAccountingGeneratorTask("cfw52967@rcasd.com");////tsa51556@rcasd.com
+		generator = new PreAccountingGeneratorTask("qrx66791@uzrip.com");////tsa51556@rcasd.com
 		praDAO = new PreAccountingDAOImpl();
 		
 	}

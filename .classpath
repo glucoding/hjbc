@@ -75,6 +75,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/aspectjrt.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/aspectjweaver.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hejia-sdk-java-1.1.1-all.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hejia-sdk-java-1.2.7-all.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

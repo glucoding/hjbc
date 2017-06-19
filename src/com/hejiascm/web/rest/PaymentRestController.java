@@ -163,8 +163,8 @@ public class PaymentRestController {
 		 if(psr != null){
 			 return psr;
 		 }else{
-			 //res.setStatus(456);
-			 return new PaymentSubRecord[0];
+			 res.setStatus(456);
+			 return null;
 		 }
 	}
 	
