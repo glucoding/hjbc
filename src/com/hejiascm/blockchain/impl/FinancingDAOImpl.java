@@ -9,6 +9,7 @@ import com.ibm.crl.bc.hejia.sdk.SdkFactory;
 import com.ibm.crl.bc.hejia.sdk.common.BankAccountInfo;
 import com.ibm.crl.bc.hejia.sdk.common.BlockchainException;
 import com.ibm.crl.bc.hejia.sdk.common.TransferRecord;
+import com.ibm.crl.bc.hejia.sdk.financing.ExpectedRepayment;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingContract;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingExecution;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingIntention;
@@ -127,11 +128,11 @@ public class FinancingDAOImpl implements FinancingDAO {
 	public String createRepaymentRecord(TransferRecord tr, String finConId, String operator) {
 		String trId = null;
 		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
-			finProxy.createRepaymentRecord(finConId, 
+			trId = finProxy.createRepaymentRecord(finConId, 
 																	 tr.getSerial(), 
 																	 tr.getAmount(), 
 																	 tr.getTime(), 
-																	 tr.getPayeeOrgId(), 
+																	 tr.getPayerOrgId(), 
 																	 tr.getPayerBankAccountInfo(), 
 																	 tr.getPayeeOrgId(), 
 																	 tr.getPayeeBankAccountInfo(), 
@@ -149,7 +150,7 @@ public class FinancingDAOImpl implements FinancingDAO {
 		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
 			finProxy.createRepaymentTransfer(finConId, 
 																	 tr.getAmount(), 
-																	 tr.getPayeeOrgId(), 
+																	 tr.getPayeeOrgId(),
 																	 tr.getPayeeBankAccountInfo(), 
 																	 tr.getRemarks());
 		}catch(BlockchainException | IOException e){
@@ -439,6 +440,18 @@ public class FinancingDAOImpl implements FinancingDAO {
 			e.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	public ExpectedRepayment getExpectedRepayment(String finConId, String expectedTime, String operator) {
+		ExpectedRepayment erp = null;
+		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
+			erp = finProxy.getExpectedRepayment(finConId, expectedTime);
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		};
+		
+		return erp;
 	}
 
 }

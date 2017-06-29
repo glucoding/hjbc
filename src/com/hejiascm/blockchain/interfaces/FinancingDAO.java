@@ -2,6 +2,7 @@ package com.hejiascm.blockchain.interfaces;
 
 import com.ibm.crl.bc.hejia.sdk.common.BankAccountInfo;
 import com.ibm.crl.bc.hejia.sdk.common.TransferRecord;
+import com.ibm.crl.bc.hejia.sdk.financing.ExpectedRepayment;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingContract;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingExecution;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingIntention;
@@ -33,6 +34,8 @@ public interface FinancingDAO {
 	FinancingContract getContractById(String fconId, String operator);
 	
 	FinancingContract[] getContracts(String query, String operator);
+	
+	ExpectedRepayment getExpectedRepayment(String finConId, String expectedTime, String operator);
 	
 	FinancingExecution getExecutionByContractId(String fconId, String operator);
 	

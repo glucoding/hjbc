@@ -7,6 +7,7 @@ import com.hejiascm.util.MiscTool;
 import com.ibm.crl.bc.hejia.sdk.common.BankAccountInfo;
 import com.ibm.crl.bc.hejia.sdk.common.Currency;
 import com.ibm.crl.bc.hejia.sdk.common.TransferRecord;
+import com.ibm.crl.bc.hejia.sdk.financing.ExpectedRepayment;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingContract;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingExecution;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingIntention;
@@ -380,5 +381,18 @@ public class FinancingRestController {
 	@ResponseBody
 	public void updateIntention(@RequestBody FinancingIntention fi,HttpServletRequest req) {
 		finDAO.updateIntention(fi, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "/bcFinancingRepayment/getExpectedRepayment", method = RequestMethod.POST)
+	@ResponseBody
+	public ExpectedRepayment getExpectedRepayment(@RequestBody CommonObject co, HttpServletRequest req) {
+		ExpectedRepayment erp = null;
+		erp = finDAO.getExpectedRepayment(co.strs[0], co.strs[1], MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(erp != null){
+			return erp;
+		}else{
+			//res.setStatus(499);
+			return  null;
+		}
 	}
 }
