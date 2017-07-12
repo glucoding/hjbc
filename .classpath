@@ -75,11 +75,11 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/aspectjrt.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/aspectjweaver.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/KTToolkit-3.0.0.2.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/KTVO-3.0.0.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hejia-sdk-java-1.2.8-all.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/ra-toolkit-3.6.4.5.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/SADK-3.2.3.0.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/SealClient-3.2.4.7.jar"/>
+	<classpathentry kind="lib" path="lib/etl-uaclient-3.4.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/logback-cfca-jdk1.6-3.2.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/ra-toolkit-3.6.4.5.jar"/>
+	<classpathentry kind="lib" path="lib/SADK-3.3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/SealClient-3.2.4.7.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
