@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.hejiascm.blockchain.interfaces.FinancingDAO;
 import com.ibm.crl.bc.hejia.sdk.SdkFactory;
+import com.ibm.crl.bc.hejia.sdk.common.Attachment;
 import com.ibm.crl.bc.hejia.sdk.common.BankAccountInfo;
 import com.ibm.crl.bc.hejia.sdk.common.BlockchainException;
 import com.ibm.crl.bc.hejia.sdk.common.TransferRecord;
@@ -33,9 +34,9 @@ public class FinancingDAOImpl implements FinancingDAO {
 	}
 
 	@Override
-	public void confirmContract(String fconId, String remarks, String operator) {
+	public void confirmContract(String fconId, String remarks, Attachment[] attas, String operator) {
 		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
-			finProxy.confirmContract(fconId, remarks);
+			finProxy.confirmContract(fconId, remarks, attas);
 		}catch(BlockchainException | IOException e){
 			e.printStackTrace();
 		}
@@ -52,19 +53,21 @@ public class FinancingDAOImpl implements FinancingDAO {
 	}
 
 	@Override
-	public void confirmRepaymentRecord(String fconId, String transferId, String operator) {
+	public String confirmRepaymentRecord(String fconId, String transferId, String operator) {
 		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
 			finProxy.confirmRepaymentRecord(fconId, transferId);
+			return "1";
 		}catch(BlockchainException | IOException e){
 			e.printStackTrace();
+			return "0";
 		}
 
 	}
 
 	@Override
-	public void confirmRequest(String requestId, String remarks, String operator) {
+	public void confirmRequest(String requestId, String remarks, Attachment[] attas, String operator) {
 		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
-			finProxy.confirmRequest(requestId, remarks);
+			finProxy.confirmRequest(requestId, remarks, attas);
 		}catch(BlockchainException | IOException e){
 			e.printStackTrace();
 		}

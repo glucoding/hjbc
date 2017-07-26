@@ -1,5 +1,6 @@
 package com.hejiascm.blockchain.interfaces;
 
+import com.ibm.crl.bc.hejia.sdk.common.Attachment;
 import com.ibm.crl.bc.hejia.sdk.common.BankAccountInfo;
 import com.ibm.crl.bc.hejia.sdk.common.TransferRecord;
 import com.ibm.crl.bc.hejia.sdk.financing.ExpectedRepayment;
@@ -11,13 +12,13 @@ import com.ibm.crl.bc.hejia.sdk.financing.FinancingRequest;
 public interface FinancingDAO {
 	void closeRequest(String requestId, String remarks, String operator);
 	
-	void confirmContract(String fconId, String remarks, String operator);
+	void confirmContract(String fconId, String remarks, Attachment[] attas, String operator);
 	
 	void confirmLoanRecord(String fconId, String transferId, String operator);
 	
-	void confirmRepaymentRecord(String fconId, String transferId, String operator);
+	String confirmRepaymentRecord(String fconId, String transferId, String operator);
 	
-	void confirmRequest(String requestId, String remarks, String operator);
+	void confirmRequest(String requestId, String remarks, Attachment[] attas, String operator);
 	
 	String createContract(FinancingContract fc, String finInstId, String operator);
 	

@@ -75,10 +75,10 @@ public class FinancingRestController {
 		finDAO.closeRequest(reqId, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 	
-	@RequestMapping(value = "/bcFinancingContract/confirm/{finConId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/bcFinancingContract/confirm", method = RequestMethod.POST)
 	@ResponseBody
-	public void confirmContract(@PathVariable String finConId, @RequestBody RemarkObject r, HttpServletRequest req) {
-		finDAO.confirmContract(finConId, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	public void confirmContract(@RequestBody ConfirmObject cfo, HttpServletRequest req) {
+		finDAO.confirmContract(cfo.getId(), cfo.getRemarks(), cfo.getAttachments(),  MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 	
 	@RequestMapping(value = "/bcLoanRecord/confirm/{finConId}/{transferId}", method = RequestMethod.GET)
@@ -89,14 +89,15 @@ public class FinancingRestController {
 	
 	@RequestMapping(value = "/bcRepaymentRecord/confirm/{finConId}/{transferId}", method = RequestMethod.GET)
 	@ResponseBody
-	public void confirmRepaymentRecord(@PathVariable String finConId, @PathVariable String transferId, HttpServletRequest req) {
-		finDAO.confirmRepaymentRecord(finConId, transferId.replaceAll("_", "#"), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	public String confirmRepaymentRecord(@PathVariable String finConId, @PathVariable String transferId, HttpServletRequest req) {
+		String result = finDAO.confirmRepaymentRecord(finConId, transferId.replaceAll("_", "#"), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		return result;
 	}
 	
-	@RequestMapping(value = "/bcFinancingRequest/confirm/{requestId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/bcFinancingRequest/confirm", method = RequestMethod.POST)
 	@ResponseBody
-	public void confirmRequest(@PathVariable String requestId, @RequestBody RemarkObject r, HttpServletRequest req) {
-		finDAO.confirmRequest(requestId, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	public void confirmRequest(@RequestBody ConfirmObject cfo, HttpServletRequest req) {
+		finDAO.confirmRequest(cfo.getId(), cfo.getRemarks(), cfo.getAttachments(),  MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 	
 	@RequestMapping(value = "/bcFinancingContract/{finInstId}", method = RequestMethod.POST)

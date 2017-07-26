@@ -33,6 +33,6 @@ public class ContractTest {
 			System.out.println(con.getVersion());
 		}
 		Assert.assertNotNull(cons);*/
-		conDAO.confirmTradeContract("b469615e-fea9-4c4a-8bc6-a0a2ac2e5600", "0.1.0","qkm10672@psoxs.com" );
+		//conDAO.confirmTradeContract("b469615e-fea9-4c4a-8bc6-a0a2ac2e5600", "0.1.0","qkm10672@psoxs.com" );
 	}
 }

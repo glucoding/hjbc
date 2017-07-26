@@ -3,6 +3,7 @@ package com.hejiascm.blockchain.interfaces;
 import java.util.List;
 
 import com.hejiascm.domains.tradecontract._TradeContract;
+import com.ibm.crl.bc.hejia.sdk.common.Attachment;
 import com.ibm.crl.bc.hejia.sdk.contract.TradeContractTerminationRequest;
 
 public interface ContractDAO {
@@ -10,7 +11,7 @@ public interface ContractDAO {
 	
 	public String changeTradeContract(_TradeContract contract, String operator);
 	
-	public void confirmTradeContract(String contractId, String version, String operator);
+	public void confirmTradeContract(String contractId, String version, Attachment[] attas,String operator);
 	
 	public void confirmTradeContractChange(String contractId, String version, String operator);
 	

@@ -11,6 +11,7 @@ import com.hejiascm.blockchain.interfaces.ContractDAO;
 import com.hejiascm.domains.tradecontract._TradeContract;
 import com.hejiascm.util.FatherToChildUtils;
 import com.ibm.crl.bc.hejia.sdk.SdkFactory;
+import com.ibm.crl.bc.hejia.sdk.common.Attachment;
 import com.ibm.crl.bc.hejia.sdk.common.BlockchainException;
 import com.ibm.crl.bc.hejia.sdk.common.Property;
 import com.ibm.crl.bc.hejia.sdk.contract.ContractProxy;
@@ -38,9 +39,9 @@ public class ContractDAOImpl implements ContractDAO {
 	}
 
 	@Override
-	public void confirmTradeContract(String contractId, String version, String operator) {
+	public void confirmTradeContract(String contractId, String version, Attachment[] attas, String operator) {
 		try(ContractProxy cp = SdkFactory.getInstance().getContractProxy(operator)){
-			cp.confirmTradeContract(contractId, version);
+			cp.confirmTradeContract(contractId, version, attas);
 		}catch(BlockchainException | IOException e){
 			e.printStackTrace();
 		}

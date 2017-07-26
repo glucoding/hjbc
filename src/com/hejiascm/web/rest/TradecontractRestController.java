@@ -1,5 +1,7 @@
 package com.hejiascm.web.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hejiascm.blockchain.interfaces.ContractDAO;
 import com.hejiascm.domains.tradecontract._TradeContract;
 import com.hejiascm.util.MiscTool;
@@ -91,10 +93,10 @@ public class TradecontractRestController {
 	 * @param Tradecontract
 	 * @return String contractId
 	 */
-	@RequestMapping(value = "/bcConfirmTradeContract/{id}/{ver}", method = RequestMethod.POST)
+	@RequestMapping(value = "/bcConfirmTradeContract", method = RequestMethod.POST)
 	@ResponseBody
-	public void confirmBcTradecontract(@PathVariable String id, @PathVariable String ver, HttpServletRequest req, HttpServletResponse res) {
-		contractDAO.confirmTradeContract(id, ver.replaceAll("_", "."), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	public void confirmBcTradecontract(@RequestBody ConfirmObject cfo, HttpServletRequest req, HttpServletResponse res) {
+		contractDAO.confirmTradeContract(cfo.getId(), "0.1.0", cfo.getAttachments(),MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 	
 	@RequestMapping(value = "/bcTradeContract/reject/{id}/{ver}", method = RequestMethod.POST)
