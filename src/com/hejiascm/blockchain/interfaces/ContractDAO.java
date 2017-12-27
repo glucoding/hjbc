@@ -34,4 +34,6 @@ public interface ContractDAO {
 	public String submitTradeContract(_TradeContract contract, String oeprator);
 	
 	public String submitTradeContractTerminationRequest(String contractId, String terminateTime, String remarks, String operator);
+	
+	public String submitTradeContractWithRelatedContract(_TradeContract contract, List<String> relatedContracts, String operator);
 }

@@ -123,6 +123,9 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 			_org.setRegAddr(map.get("regAddr"));
 			_org.setComAddr(map.get("comAddr"));
 			_org.setFinanceGrantNo(map.get("financeGrantNo"));
+			if(map.containsKey("certStatus")){
+				_org.setCertStatus(map.get("certStatus"));
+			}
 		}
 		return _org;
 	}
@@ -205,6 +208,9 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 				_org.setRegAddr(map.get("regAddr"));
 				_org.setComAddr(map.get("comAddr"));
 				_org.setFinanceGrantNo(map.get("financeGrantNo"));
+				if(map.containsKey("certStatus")){
+					_org.setCertStatus(map.get("certStatus"));
+				}	
 			}
 			_orgs[i] = _org;
 			i++;
@@ -252,7 +258,8 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 				new Property("agentEmail", org.getAgentEmail()),
 				new Property("regAddr", org.getRegAddr()),
 				new Property("comAddr", org.getComAddr()),
-				new Property("financeGrantNo", org.getFinanceGrantNo())
+				new Property("financeGrantNo", org.getFinanceGrantNo()),
+				new Property("certStatus", org.getCertStatus())
 		};
 		
 		OrgRegisterResponse res = null;
@@ -347,6 +354,9 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 						oldOrg.setRegAddr(map.get("regAddr"));
 						oldOrg.setComAddr(map.get("comAddr"));
 						oldOrg.setFinanceGrantNo(map.get("financeGrantNo"));
+						if(map.containsKey("certStatus")){
+							oldOrg.setCertStatus(map.get("certStatus"));
+						}	
 					}
 					our.setOldInfo(oldOrg);
 					
@@ -390,6 +400,9 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 						newOrg.setRegAddr(map.get("regAddr"));
 						newOrg.setComAddr(map.get("comAddr"));
 						newOrg.setFinanceGrantNo(map.get("financeGrantNo"));
+						if(map.containsKey("certStatus")){
+							newOrg.setCertStatus(map.get("certStatus"));
+						}	
 					}
 					our.setNewInfo(newOrg);
 					ours[i++] = our;
@@ -460,6 +473,9 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 						oldOrg.setRegAddr(map.get("regAddr"));
 						oldOrg.setComAddr(map.get("comAddr"));
 						oldOrg.setFinanceGrantNo(map.get("financeGrantNo"));
+						if(map.containsKey("certStatus")){
+							oldOrg.setCertStatus(map.get("certStatus"));
+						}	
 					}
 					our.setOldInfo(oldOrg);
 					
@@ -503,6 +519,9 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 						newOrg.setRegAddr(map.get("regAddr"));
 						newOrg.setComAddr(map.get("comAddr"));
 						newOrg.setFinanceGrantNo(map.get("financeGrantNo"));
+						if(map.containsKey("certStatus")){
+							newOrg.setCertStatus(map.get("certStatus"));
+						}	
 					}
 					our.setNewInfo(newOrg);
 					ours[i++] = our;
@@ -562,7 +581,8 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 					new Property("agentEmail", org.getAgentEmail()),
 					new Property("regAddr", org.getRegAddr()),
 					new Property("comAddr", org.getComAddr()),
-					new Property("financeGrantNo", org.getFinanceGrantNo())
+					new Property("financeGrantNo", org.getFinanceGrantNo()),
+					new Property("certStatus", org.getCertStatus())
 			};
 			obc.setProperties(props);
 			obc.setAttachments(org.getAttachments());
@@ -584,8 +604,22 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 
 	@Override
 	public void update(String orgId, Property[] properties, String operator) {
+		OrgInfo org = null;
 		try(OrganizationProxy op = SdkFactory.getInstance().getOrganizationProxy(operator)){
-			op.update(orgId, properties);
+			org = op.getOrgById(orgId);
+			
+			Property[] props = org.getProperties();
+			if(props != null){
+				for(Property p : props){
+					for(Property pnew : properties){
+						if(p.getName().equals(pnew.getName())){
+							p.setValue(pnew.getValue());
+						}
+					}
+				}
+			}
+			
+			op.update(orgId, props);
 		}catch(BlockchainException | IOException e){
 			e.printStackTrace();
 		}
@@ -653,6 +687,9 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 			oldOrg.setRegAddr(map.get("regAddr"));
 			oldOrg.setComAddr(map.get("comAddr"));
 			oldOrg.setFinanceGrantNo(map.get("financeGrantNo"));
+			if(map.containsKey("certStatus")){
+				oldOrg.setCertStatus(map.get("certStatus"));
+			}	
 		}
 		our.setOldInfo(oldOrg);
 		
@@ -695,10 +732,132 @@ public class OrgnizationDAOImpl implements OrganizationDAO {
 			newOrg.setRegAddr(map.get("regAddr"));
 			newOrg.setComAddr(map.get("comAddr"));
 			newOrg.setFinanceGrantNo(map.get("financeGrantNo"));
+			if(map.containsKey("certStatus")){
+				newOrg.setCertStatus(map.get("certStatus"));
+			}	
 		}
 		our.setNewInfo(newOrg);
 		
 		return our;
+	}
+
+	@Override
+	public _OrgUpdateRequest[] getOrgUpdateRequests(String condition, String operator) {
+		OrgUpdateRequest[] oursBc = null;
+		try(OrganizationProxy op = SdkFactory.getInstance().getOrganizationProxy(operator)){
+			oursBc = op.getOrgUpdateRequests(condition);
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		}
+		
+		_OrgUpdateRequest[] ours = new _OrgUpdateRequest[oursBc.length];
+		int i = 0;
+		
+		for(OrgUpdateRequest ourBc: oursBc){
+					_OrgUpdateRequest our = new _OrgUpdateRequest();
+					FatherToChildUtils.fatherToChild(ourBc, our);
+					
+					_OrgInfo oldOrg = new _OrgInfo();
+					_OrgInfo newOrg = new _OrgInfo();
+					
+					FatherToChildUtils.fatherToChild(ourBc.getCurrentInfo(), oldOrg);
+					FatherToChildUtils.fatherToChild(ourBc.getUpdateInfo(), newOrg);
+					
+					Property[] propsForOld = ourBc.getCurrentInfo().getProperties();
+					if(propsForOld != null){
+						Map<String,String> map = PropertySerializer.fromProperties(propsForOld);
+						oldOrg.setOrgType(map.get("orgType"));
+						oldOrg.setOrgAddress(map.get("orgAddress"));
+						oldOrg.setOrgRep(map.get("orgRep"));
+						oldOrg.setEstablishDate(map.get("establishDate"));
+						oldOrg.setValidityTerm(map.get("validityTerm"));
+						oldOrg.setBusinessScope(map.get("businessScope"));
+						oldOrg.setRegistrationId(map.get("registrationId"));
+						oldOrg.setOrgCode(map.get("orgCode"));
+						oldOrg.setTaxCode(map.get("taxCode"));
+						oldOrg.setTel(map.get("tel"));
+						oldOrg.setRegistrationAmount(map.get("registrationAmount"));
+						oldOrg.setAdmin(map.get("admin"));
+						oldOrg.setEmail(map.get("email"));
+						oldOrg.setMobile(map.get("mobile"));
+						oldOrg.setPassword(map.get("password"));
+						oldOrg.setOpid(map.get("opid"));
+						oldOrg.setSubmitTime(map.get("submitTime"));
+						oldOrg.setApproveTime(map.get("approveTime"));
+						oldOrg.setQuitTime(map.get("quitTime"));
+						oldOrg.setOrgCat(map.get("orgCat"));
+						oldOrg.setInvitingMobile(map.get("invitingMobile"));
+						oldOrg.setAuthCode(map.get("authCode"));
+						oldOrg.setMobileAuthCode(map.get("mobileAuthCode"));
+						oldOrg.setOrgCodeTerm(map.get("orgCodeTerm"));
+						oldOrg.setOpenApprovAuthNum(map.get("openApprovAuthNum"));
+						oldOrg.setOrgTrustCode(map.get("orgTrustCode"));
+						oldOrg.setRepCerType(map.get("repCerType"));
+						oldOrg.setRepCerNum(map.get("repCerNum"));
+						oldOrg.setRepCerTerm(map.get("repCerTerm"));
+						oldOrg.setAgentName(map.get("agentName"));
+						oldOrg.setAgentType(map.get("agentType"));
+						oldOrg.setAgentCerNum(map.get("agentCerNum"));
+						oldOrg.setAgentCerTerm(map.get("agentCerTerm"));
+						oldOrg.setAgentEmail(map.get("agentEmail"));
+						oldOrg.setRegAddr(map.get("regAddr"));
+						oldOrg.setComAddr(map.get("comAddr"));
+						oldOrg.setFinanceGrantNo(map.get("financeGrantNo"));
+						if(map.containsKey("certStatus")){
+							oldOrg.setCertStatus(map.get("certStatus"));
+						}	
+					}
+					our.setOldInfo(oldOrg);
+					
+					Property[] propsForNew = ourBc.getUpdateInfo().getProperties();
+					if(propsForNew != null){
+						Map<String,String> map = PropertySerializer.fromProperties(propsForNew);
+						newOrg.setOrgType(map.get("orgType"));
+						newOrg.setOrgAddress(map.get("orgAddress"));
+						newOrg.setOrgRep(map.get("orgRep"));
+						newOrg.setEstablishDate(map.get("establishDate"));
+						newOrg.setValidityTerm(map.get("validityTerm"));
+						newOrg.setBusinessScope(map.get("businessScope"));
+						newOrg.setRegistrationId(map.get("registrationId"));
+						newOrg.setOrgCode(map.get("orgCode"));
+						newOrg.setTaxCode(map.get("taxCode"));
+						newOrg.setTel(map.get("tel"));
+						newOrg.setRegistrationAmount(map.get("registrationAmount"));
+						newOrg.setAdmin(map.get("admin"));
+						newOrg.setEmail(map.get("email"));
+						newOrg.setMobile(map.get("mobile"));
+						newOrg.setPassword(map.get("password"));
+						newOrg.setOpid(map.get("opid"));
+						newOrg.setSubmitTime(map.get("submitTime"));
+						newOrg.setApproveTime(map.get("approveTime"));
+						newOrg.setQuitTime(map.get("quitTime"));
+						newOrg.setOrgCat(map.get("orgCat"));
+						newOrg.setInvitingMobile(map.get("invitingMobile"));
+						newOrg.setAuthCode(map.get("authCode"));
+						newOrg.setMobileAuthCode(map.get("mobileAuthCode"));
+						newOrg.setOrgCodeTerm(map.get("orgCodeTerm"));
+						newOrg.setOpenApprovAuthNum(map.get("openApprovAuthNum"));
+						newOrg.setOrgTrustCode(map.get("orgTrustCode"));
+						newOrg.setRepCerType(map.get("repCerType"));
+						newOrg.setRepCerNum(map.get("repCerNum"));
+						newOrg.setRepCerTerm(map.get("repCerTerm"));
+						newOrg.setAgentName(map.get("agentName"));
+						newOrg.setAgentType(map.get("agentType"));
+						newOrg.setAgentCerNum(map.get("agentCerNum"));
+						newOrg.setAgentCerTerm(map.get("agentCerTerm"));
+						newOrg.setAgentEmail(map.get("agentEmail"));
+						newOrg.setRegAddr(map.get("regAddr"));
+						newOrg.setComAddr(map.get("comAddr"));
+						newOrg.setFinanceGrantNo(map.get("financeGrantNo"));
+						if(map.containsKey("certStatus")){
+							newOrg.setCertStatus(map.get("certStatus"));
+						}	
+					}
+					our.setNewInfo(newOrg);
+					ours[i++] = our;
+		}
+		
+		return ours;
 	}
 
 }

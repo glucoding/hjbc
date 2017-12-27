@@ -10,11 +10,13 @@ import com.hejiascm.domains.payment.PaymentCalculation;
 import com.ibm.crl.bc.hejia.sdk.GlobalConf;
 import com.ibm.crl.bc.hejia.sdk.SdkFactory;
 import com.ibm.crl.bc.hejia.sdk.common.BlockchainException;
+import com.ibm.crl.bc.hejia.sdk.common.Property;
 import com.ibm.crl.bc.hejia.sdk.common.TransferRecord;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingProxy;
 import com.ibm.crl.bc.hejia.sdk.payment.CashPaymentRecord;
 import com.ibm.crl.bc.hejia.sdk.payment.PaymentApplication;
 import com.ibm.crl.bc.hejia.sdk.payment.PaymentProxy;
+import com.ibm.crl.bc.hejia.sdk.payment.PaymentReason;
 import com.ibm.crl.bc.hejia.sdk.payment.PaymentRecord;
 import com.ibm.crl.bc.hejia.sdk.payment.PaymentSubRecord;
 import com.ibm.crl.bc.hejia.sdk.payment.VoucherPaymentRecord;
@@ -42,11 +44,13 @@ public class PaymentDAOImpl implements PaymentDAO {
 	}
 
 	@Override
-	public void confirmPaymentRecord(String payId, String reviewRemarks, String operator) {
+	public String confirmPaymentRecord(String payId, String reviewRemarks, String operator) {
 		try(PaymentProxy payProxy = SdkFactory.getInstance().getPaymentProxy(operator)){
 			payProxy.confirmPaymentRecord(payId, reviewRemarks);
+			return "1";
 		}catch(BlockchainException | IOException e){
 			e.printStackTrace();
+			return "0";
 		}
 	}
 
@@ -176,6 +180,27 @@ public class PaymentDAOImpl implements PaymentDAO {
 		}
 		return payId;
 	}
+	
+	@Override
+	public String submitReceivedCashPaymentRecord(CashPaymentRecord cpr, String operator) {
+		String payId = null;
+		try(PaymentProxy payProxy = SdkFactory.getInstance().getPaymentProxy(operator)){
+			payId = payProxy.submitReceivedCashPaymentRecord(cpr.getBankTransferSerial(), 
+					                                                                                cpr.getPayerBankAccount(), 
+					                                                                                cpr.getPayeeBankAccount().getBankAccount(),
+					                                                                                cpr.getPayeeBankAccount(), 
+					                                                                                cpr.getContractId(), 
+					                                                                                cpr.getAmount(), 
+					                                                                                cpr.getPaymentTime(), 
+					                                                                                cpr.getPaymentSubRecords(), 
+					                                                                                cpr.getAttachments(),
+					                                                                                cpr.getAgreement().getRemarks(),
+					                                                                                new Property[]{});
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		}
+		return payId;
+	}
 
 	@Override
 	public String submitVoucherPaymentRecord(VoucherPaymentRecord vpr, String remarks, String operator) {
@@ -198,5 +223,27 @@ public class PaymentDAOImpl implements PaymentDAO {
 			e.printStackTrace();
 		}
 		return psrs;
+	}
+
+	@Override
+	public String submitDirectReceivedCashPaymentRecord(CashPaymentRecord cpr,String operator) {
+		String result = null;
+		try(PaymentProxy payProxy = SdkFactory.getInstance().getPaymentProxy(operator)){
+			result = payProxy.submitDirectReceivedCashPaymentRecord(cpr.getContractId(),
+																																	 PaymentReason.PRE_ACCOUNTING,
+																																	 cpr.getBankTransferSerial(), 
+																																	 cpr.getPayerBankAccount(), 
+																																	 cpr.getPayeeBankAccount().getBankAccount(), 
+																																	 cpr.getPayeeBankAccount(), 
+																																	 cpr.getAmount(), 
+																																	 cpr.getPaymentTime(), 
+																																	 cpr.getPaymentSubRecords(), 
+																																	 cpr.getAttachments(), 
+																																	 cpr.getAgreement().getRemarks(), 
+																																	 new Property[0]);
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		}
+		return result;
 	}
 }

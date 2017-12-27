@@ -26,6 +26,8 @@ public interface OrganizationDAO {
 	
 	public _OrgUpdateRequest getUpdateRequestById(String requestId, String operator);
 	
+	public _OrgUpdateRequest[] getOrgUpdateRequests(String condition, String operator);
+	
 	public _OrgInfo getOrgById(String orgId);
 	
 	public OrgSummaryInfo[] getOrgList();

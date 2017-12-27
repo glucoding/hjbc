@@ -62,8 +62,9 @@ public class PaymentRestController {
 	
 	@RequestMapping(value = "/bcPaymentRecord/confirm/{recordId}", method = RequestMethod.POST)
 	@ResponseBody
-	public void confirmPaymentRecord(@PathVariable String recordId,@RequestBody RemarkObject r,  HttpServletRequest req, HttpServletResponse res) {
-		 pDAO.confirmPaymentRecord(recordId, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	public String confirmPaymentRecord(@PathVariable String recordId,@RequestBody RemarkObject r,  HttpServletRequest req, HttpServletResponse res) {
+		 String result = pDAO.confirmPaymentRecord(recordId, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		 return result;
 	}
 	
 	@RequestMapping(value = "/bcPaymentRecord/delete/{recordId}", method = RequestMethod.POST)
@@ -144,6 +145,18 @@ public class PaymentRestController {
 		 }
 	}
 	
+	@RequestMapping(value = "/bcPaymentRecord/cashReceived", method = RequestMethod.POST)
+	@ResponseBody
+	public String submitReceivedCashPaymentRecord(@RequestBody CashPaymentRecord cpr, HttpServletRequest req, HttpServletResponse res) {
+		 String cprId = pDAO.submitReceivedCashPaymentRecord(cpr, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		 if(cprId != null){
+			 return cprId;
+		 }else{
+			 res.setStatus(456);
+			 return "提交现金支付记录失败";
+		 }
+	}
+	
 	@RequestMapping(value = "/bcPaymentApplication", method = RequestMethod.POST)
 	@ResponseBody
 	public String submitPaymentApplication(@RequestBody PaymentApplication pa, HttpServletRequest req, HttpServletResponse res) {
@@ -176,5 +189,18 @@ public class PaymentRestController {
 	@RequestMapping(value = "/bcPaymentApplication/reject/{appId}", method = RequestMethod.POST)
 	public void rejectPaymentApplication(@PathVariable String appId,@RequestBody RemarkObject r,  HttpServletRequest req, HttpServletResponse res) {
 		 pDAO.rejectPaymentApplication(appId, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "/bcPaymentRecord/directReceivedCashPayment", method = RequestMethod.POST)
+	@ResponseBody
+	public String submitDirectReceivedCashPayment(@RequestBody CashPaymentRecord cpr,  HttpServletRequest req, HttpServletResponse res) {
+		String result = null; 
+		result = pDAO.submitDirectReceivedCashPaymentRecord(cpr,  MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(result != null){
+			return result;
+		}else{
+			//res.setStatus(456);
+			return "";
+		}
 	}
 }

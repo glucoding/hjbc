@@ -11,7 +11,7 @@ public class InstantiationTracingBeanPostProcessor implements ApplicationListene
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		if(event.getApplicationContext().getParent() == null){
-			String host = "192.168.20.106";//141,106
+			String host = "192.168.40.102";//20.141,20.106,40.102
 			GlobalConf.setInstance(new RedisConf(host));
 			System.out.println("Note: Redis host has been set to:" + host);
 			//System.out.println(System.getenv(GlobalConf.SDK_ENV));

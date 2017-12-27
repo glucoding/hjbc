@@ -3,9 +3,11 @@ package com.hejiascm.blockchain.interfaces;
 import java.util.List;
 
 import com.hejiascm.domains.payment.PaymentCalculation;
+import com.ibm.crl.bc.hejia.sdk.common.Property;
 import com.ibm.crl.bc.hejia.sdk.common.TransferRecord;
 import com.ibm.crl.bc.hejia.sdk.payment.CashPaymentRecord;
 import com.ibm.crl.bc.hejia.sdk.payment.PaymentApplication;
+import com.ibm.crl.bc.hejia.sdk.payment.PaymentReason;
 import com.ibm.crl.bc.hejia.sdk.payment.PaymentRecord;
 import com.ibm.crl.bc.hejia.sdk.payment.PaymentSubRecord;
 import com.ibm.crl.bc.hejia.sdk.payment.VoucherPaymentRecord;
@@ -15,7 +17,7 @@ public interface PaymentDAO {
 	
 	void confirmPayemntApplication(String payAppId, String remarks, String operator);
 	
-	void confirmPaymentRecord(String payId, String reviewRemarks, String operator);
+	String confirmPaymentRecord(String payId, String reviewRemarks, String operator);
 	
 	void deletePaymentRecord(String payId, String reviewRemarks, String operator);
 	
@@ -37,7 +39,11 @@ public interface PaymentDAO {
 	
 	String submitCashPaymentRecord(CashPaymentRecord cpr, String operator);
 	
+	String submitReceivedCashPaymentRecord(CashPaymentRecord cpr, String operator);
+	
 	String submitPaymentApplication(PaymentApplication pa, String operator);
+	
+	String submitDirectReceivedCashPaymentRecord(CashPaymentRecord cpr,  String operator);
 	
 	String submitVoucherPaymentRecord(VoucherPaymentRecord vpr, String remarks, String operator);
 	

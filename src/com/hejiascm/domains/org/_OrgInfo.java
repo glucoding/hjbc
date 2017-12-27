@@ -40,6 +40,7 @@ public class _OrgInfo extends OrgInfo {
 	private String regAddr;
 	private String comAddr;
 	private String financeGrantNo;
+	private String certStatus;
 
 	public _OrgInfo() {
 		// TODO Auto-generated constructor stub
@@ -339,5 +340,13 @@ public class _OrgInfo extends OrgInfo {
 
 	public void setFinanceGrantNo(String financeGrantNo) {
 		this.financeGrantNo = financeGrantNo;
+	}
+	
+	public String getCertStatus() {
+		return certStatus;
+	}
+
+	public void setCertStatus(String certStatus) {
+		this.certStatus = certStatus;
 	}
 }

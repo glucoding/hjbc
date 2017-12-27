@@ -14,6 +14,7 @@ import com.hejiascm.blockchain.impl.FinancingDAOImpl;
 import com.ibm.crl.bc.hejia.sdk.common.BankAccountInfo;
 import com.ibm.crl.bc.hejia.sdk.financing.FinContractParticipant;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingContract;
+import com.ibm.crl.bc.hejia.sdk.financing.FinancingExecution;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingRequest;
 
 public class FinancingTest {
@@ -36,21 +37,23 @@ public class FinancingTest {
 			System.out.println("*****************"+fr.getApplicantOrgId());
 		}*/
 		ObjectMapper mapper = new ObjectMapper();
-		FinContractParticipant fcp = new FinContractParticipant();
+		/*FinContractParticipant fcp = new FinContractParticipant();
 		FinancingContract fc = new FinancingContract();
 		FinContractParticipant[] fcps = new FinContractParticipant[1];
 		BankAccountInfo bai = new BankAccountInfo();
 		fcp.setBankAccountInfo(bai);
 		fcps[0] = fcp;
-		fc.setParticipants(fcps);
+		fc.setParticipants(fcps);*/
+
+		//fc.setSerial(serial)
+		//fDAO.createContract(fc, "9235fa0b-99e9-405a-aa54-e283f0e6ba89", "zhihong_liang@qq.com");
+		FinancingExecution[] fes = fDAO.getExecutions("{}", "jt03@aa.com");
 		try {
-			System.out.println(mapper.writeValueAsString(fc));
+			System.out.println(mapper.writeValueAsString(fes));
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//fc.setSerial(serial)
-		//fDAO.createContract(fc, "9235fa0b-99e9-405a-aa54-e283f0e6ba89", "zhihong_liang@qq.com");
 	}
 
 }

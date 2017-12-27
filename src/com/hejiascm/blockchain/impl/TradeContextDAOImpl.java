@@ -71,4 +71,16 @@ public class TradeContextDAOImpl implements TradeContextDAO {
 		return ts;
 	}
 
+	@Override
+	public Property[] getDetailStatistics(TradeContext[] contexts, String operator) {
+		Property[] properties= null;
+		try(TradeContextProxy tcProxy = SdkFactory.getInstance().getTradeContextProxy(operator)){
+			properties = tcProxy.getDetailStatistics(contexts);
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		}
+		
+		return properties;
+	}
+
 }

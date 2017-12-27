@@ -150,7 +150,7 @@ public class CapitalAccRestController {
 			return btrId;
 		}else{
 			res.setStatus(456);
-			return "创建银行转账记录失败";
+			return "";
 		}
 	}
 	
@@ -184,10 +184,10 @@ public class CapitalAccRestController {
 	public String succeed(@RequestBody BankTransferRecord btr, HttpServletRequest req, HttpServletResponse res) {
 		String id = capDAO.succeedToTransfer(btr,  MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 		if(id != null){
-			return id;
+			return "'"+id+"'";
 		}else{
 			res.setStatus(456);
-			return "创建银行转账记录失败";
+			return "''";
 		}
 	}
 	

@@ -16,6 +16,7 @@ import com.ibm.crl.bc.hejia.sdk.financing.FinancingExecution;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingIntention;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingProxy;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingRequest;
+import com.ibm.crl.bc.hejia.sdk.financing.ReceivableTransferRequest;
 
 @Component("FinancingDAO")
 public class FinancingDAOImpl implements FinancingDAO {
@@ -455,6 +456,102 @@ public class FinancingDAOImpl implements FinancingDAO {
 		};
 		
 		return erp;
+	}
+
+	@Override
+	public String createReceivableTransferRequest(ReceivableTransferRequest rtr, String operator) {
+		String result = null;
+		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
+			result = finProxy.createReceivableTransferRequest(rtr.getSerial(), 
+																												 rtr.getName(), 
+																												 rtr.getDescription(), 
+																												 rtr.getFinancingIntentionId(),
+																												 rtr.getTransferFromOrg(), 
+																												 rtr.getTransferToOrg(), 
+																												 rtr.getPayerOrg(), 
+																												 rtr.getApplicationOrg(),
+																												 rtr.getTradeContext(), 
+																												 rtr.getTradeContractId(), 
+																												 rtr.getTradeAmount(), 
+																												 rtr.getAttachments(), 
+																												 rtr.getProperties());
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		};
+		return result;
+	}
+
+	@Override
+	public ReceivableTransferRequest getReceivableTransferRequestById(String id, String operator) {
+		ReceivableTransferRequest rtr = null;
+		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
+			rtr = finProxy.getReceivableTransferRequestById(id);
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		};
+		return rtr;
+	}
+
+	@Override
+	public ReceivableTransferRequest[] getReceivableTransferRequests(String condition, String operator) {
+		ReceivableTransferRequest[] rtrs = null;
+		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
+			rtrs = finProxy.getReceivableTransferRequests(condition);
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		};
+		return rtrs;
+	}
+
+	@Override
+	public void rejectReceivableTransferRequest(String id, String remarks, String operator) {
+		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
+			finProxy.rejectReceivableTransferRequest(id, null, remarks);//第二个参数attahment[]设为null
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		};	
+	}
+
+	@Override
+	public String createIntentionWithReceivableTransferRequest(FinancingIntention intention, String operator) {
+		String intentionId = null;
+		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
+			intentionId = finProxy.createIntention(intention.getFinancingRequestId(), 
+																   intention.getDescription(),
+																   intention.getFinancingAmount(), 
+																   intention.getFee(), 
+																   intention.getFinancingRate(), 
+																   intention.getOverdueRate(), 
+																   intention.getLendingDate(), 
+																   intention.getRepaymentDate(), 
+																   intention.getPrepaymentAllowed(), 
+																   intention.getRepaymentMethod(), 
+																   intention.getRepaymentPlan(), 
+																   intention.getEffectiveTime(), 
+																   intention.getProperties(),
+																   intention.getReceivableTransferRequired());
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		}
+		return intentionId;
+	}
+
+	@Override
+	public void confirmReceivableTransferRequest(String id, Attachment[] attachments, String remark, String operator) {
+		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
+			finProxy.confirmReceivableTransferRequest(id, attachments, remark);//第二个参数attahment[]设为null
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		};		
+	}
+
+	@Override
+	public void withdrawReceivableTransferRequest(String id, Attachment[] attachments, String remark, String operator) {
+		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
+			finProxy.withdrawReceivableTransferRequest(id, attachments, remark);//第二个参数attahment[]设为null
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		};	
 	}
 
 }

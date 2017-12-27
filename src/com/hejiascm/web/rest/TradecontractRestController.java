@@ -88,6 +88,18 @@ public class TradecontractRestController {
 		}
 	}
 	
+	@RequestMapping(value = "/bcTradeContract/withRelatedContracts", method = RequestMethod.POST)
+	@ResponseBody
+	public String newBcTradecontractWithRelatedContracts(@RequestBody _TradeContract contract, HttpServletRequest req, HttpServletResponse res) {
+		String result = contractDAO.submitTradeContractWithRelatedContract(contract,contract.getRelatedContracts(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(result != null){
+			return result;
+		}else{
+			res.setStatus(499);
+			return "合同创建失败，请联系系统管理员";
+		}
+	}
+	
 	/**
 	 * Block chain
 	 * @param Tradecontract

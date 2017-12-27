@@ -8,6 +8,7 @@ import com.ibm.crl.bc.hejia.sdk.financing.FinancingContract;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingExecution;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingIntention;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingRequest;
+import com.ibm.crl.bc.hejia.sdk.financing.ReceivableTransferRequest;
 
 public interface FinancingDAO {
 	void closeRequest(String requestId, String remarks, String operator);
@@ -67,16 +68,30 @@ public interface FinancingDAO {
 	
 	String createIntention(FinancingIntention intension, String operator);
 	
+	String createIntentionWithReceivableTransferRequest(FinancingIntention intention, String operator);
+	
+	String createReceivableTransferRequest(ReceivableTransferRequest rtr, String operator);
+	
 	FinancingIntention getIntentionById(String finIntentionId, String operator);
 	
 	FinancingIntention[] getIntentions(String query, String operator);
 	
 	FinancingIntention[] getIntentionsByFinRequest(String finReqId, String operator);
 	
+	ReceivableTransferRequest getReceivableTransferRequestById(String id, String operator);
+	
+	ReceivableTransferRequest[] getReceivableTransferRequests(String condition, String operator);
+	
+	void rejectReceivableTransferRequest(String id, String remarks, String operator);
+	
 	void selectIntention(String finIntentionId, String remarks, String operator);
 	
 	void unselectIntention(String finIntentionId, String remarks, String operator);
 	
 	void updateIntention(FinancingIntention fi, String operator);
+	
+	void confirmReceivableTransferRequest(java.lang.String id, Attachment[] attachments, java.lang.String remark, String operator) ;
+	
+	void withdrawReceivableTransferRequest(java.lang.String id, Attachment[] attachments, java.lang.String remark,String operator); 
 	
 }

@@ -15,6 +15,7 @@ import com.ibm.crl.bc.hejia.sdk.common.Attachment;
 import com.ibm.crl.bc.hejia.sdk.common.BlockchainException;
 import com.ibm.crl.bc.hejia.sdk.common.Property;
 import com.ibm.crl.bc.hejia.sdk.contract.ContractProxy;
+import com.ibm.crl.bc.hejia.sdk.contract.Term;
 import com.ibm.crl.bc.hejia.sdk.contract.TradeContract;
 import com.ibm.crl.bc.hejia.sdk.contract.TradeContractTerminationRequest;
 import com.ibm.crl.bc.hejia.sdk.util.PropertySerializer;
@@ -141,10 +142,22 @@ public class ContractDAOImpl implements ContractDAO {
 		};
 		
 		String res = null;
+		
+		//对合同条款类型进行判断，若为结算条款，则进行调整后再放入Term[]
+		Term[] terms = contract.getTerms();
+		List<Term> newTermList =  java.util.Arrays.asList(terms);//数组转列表
+		for(Term t:terms){
+			if(t.getType().equals("numAccounting")){
+				newTermList.add(Term.getAutoNumAccountingTerm(Double.valueOf(t.getContent())));
+			}
+		}
+		Term[] newTerms = new Term[newTermList.size()];
+		newTermList.toArray(newTerms);//列表转数组
+		
 		try(ContractProxy cp = SdkFactory.getInstance().getContractProxy(operator)){
 			res = cp.submitTradeContract(contract.getContractName(), 
 																		  contract.getSerial(), 
-																		  contract.getTerms(),
+																		  newTerms,//使用处理过后的条款数组
 																		  contract.getContractType(), 
 																		  contract.getServiceType(),
 																		  contract.getEffectiveTime(),
@@ -170,6 +183,42 @@ public class ContractDAOImpl implements ContractDAO {
 	public String submitTradeContractTerminationRequest(String contractId, String terminateTime, String remarks, String operator) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String submitTradeContractWithRelatedContract(_TradeContract contract, List<String> relatedContracts,
+			String operator) {
+		Property[] props = new Property[]{
+				new Property("orgId", contract.getOrgId()),
+				new Property("orgName", contract.getOrgName()),
+				new Property("name", contract.getName())
+		};
+		
+		String res = null;
+		try(ContractProxy cp = SdkFactory.getInstance().getContractProxy(operator)){
+			res = cp.submitTradeContractWithRelatedContracts(contract.getContractName(), 
+																		  contract.getSerial(), 
+																		  relatedContracts,
+																		  contract.getTerms(),
+																		  contract.getContractType(), 
+																		  contract.getServiceType(),
+																		  contract.getEffectiveTime(),
+																		  contract.getExpirationTime(), 
+																		  contract.getCurrency(), 
+																		  contract.getParticipants(), 
+																		  props, 
+																		  contract.getDataEffectiveParticipant(), 
+																		  contract.getOrderSubmitterId(), 
+																		  contract.getGoods(),
+																		  contract.getAmount(),
+																		  contract.getMeansOfTransportation(), 
+																		  contract.getAttachments(), 
+																		  "remarks", 
+																		  contract.getDescription());
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		}
+		return res;
 	}
 
 }

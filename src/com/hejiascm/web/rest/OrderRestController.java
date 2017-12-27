@@ -80,7 +80,7 @@ public class OrderRestController {
 			return result;
 		}else{
 			res.setStatus(499);
-			return "合同创建失败";
+			return "订单创建失败";
 		}
 	}
 	

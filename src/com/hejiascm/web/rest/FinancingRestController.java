@@ -12,6 +12,7 @@ import com.ibm.crl.bc.hejia.sdk.financing.FinancingContract;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingExecution;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingIntention;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingRequest;
+import com.ibm.crl.bc.hejia.sdk.financing.ReceivableTransferRequest;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -330,6 +331,18 @@ public class FinancingRestController {
 		}
 	}
 	
+	@RequestMapping(value = "/bcFinancingRequest/createIntentionWithReceivableTransferRequest", method = RequestMethod.POST)
+	@ResponseBody
+	public String createIntentionWithReceivableTransferRequest(@RequestBody FinancingIntention fi, HttpServletRequest req, HttpServletResponse res) {
+		String result = finDAO.createIntentionWithReceivableTransferRequest(fi, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(result != null){
+			return result;
+		}else{
+			res.setStatus(499);
+			return "创建融资意向失败";
+		}
+	}
+	
 	@RequestMapping(value = "/bcFinancingRequest/getIntentionById/{finIntId}", method = RequestMethod.GET)
 	@ResponseBody
 	public FinancingIntention getIntentionById(@PathVariable String finIntId, HttpServletRequest req, HttpServletResponse res) {
@@ -395,5 +408,59 @@ public class FinancingRestController {
 			//res.setStatus(499);
 			return  null;
 		}
+	}
+	
+	@RequestMapping(value = "/bcReceivableTransferRequest", method = RequestMethod.POST)
+	@ResponseBody
+	public String createReceivableTransferRequest(@RequestBody ReceivableTransferRequest rtr, HttpServletRequest req, HttpServletResponse res) {
+		String result = finDAO.createReceivableTransferRequest(rtr, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(result != null){
+			return "'"+result+"'";
+		}else{
+			res.setStatus(499);
+			return "创建转让通知失败";
+		}
+	}
+	
+	@RequestMapping(value = "/bcReceivableTransferRequest/{rtrId}", method = RequestMethod.GET)
+	@ResponseBody
+	public ReceivableTransferRequest getReceivableTransferRequestById(@PathVariable String rtrId, HttpServletRequest req, HttpServletResponse res) {
+		ReceivableTransferRequest rtr = finDAO.getReceivableTransferRequestById(rtrId, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(rtr != null){
+			return rtr;
+		}else{
+			//res.setStatus(499);
+			return  null;
+		}
+	}
+	
+	@RequestMapping(value = "/bcReceivableTransferRequest/query", method = RequestMethod.POST)
+	@ResponseBody
+	public ReceivableTransferRequest[] getReceivableRequests(@RequestBody QueryObject q, HttpServletRequest req, HttpServletResponse res) {
+		ReceivableTransferRequest[] rtrs = finDAO.getReceivableTransferRequests(q.getQ().replaceAll("\'", "\""), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(rtrs != null){
+			return rtrs;
+		}else{
+			//res.setStatus(499);
+			return  new ReceivableTransferRequest[0];
+		}
+	}
+	
+	@RequestMapping(value = "/bcReceivableTransferRequest/reject/{rtrId}", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateIntention(@PathVariable String rtrId, @RequestBody RemarkObject ro,HttpServletRequest req) {
+		finDAO.rejectReceivableTransferRequest(rtrId, ro.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "bcReceivableTransferRequest/confirm", method = RequestMethod.POST)
+	@ResponseBody
+	public void confirmReceivableTransferRequest(@RequestBody ReceivableTransferRequest rtr, HttpServletRequest req) {
+		finDAO.confirmReceivableTransferRequest(rtr.getId(), rtr.getAttachments(), rtr.getAgreement().getRemarks(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "bcReceivableTransferRequest/withdraw", method = RequestMethod.POST)
+	@ResponseBody
+	public void withdrawReceivableTransferRequest(@RequestBody ReceivableTransferRequest rtr, HttpServletRequest req) {
+		finDAO.withdrawReceivableTransferRequest(rtr.getId(), rtr.getAttachments(), rtr.getAgreement().getRemarks(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 }

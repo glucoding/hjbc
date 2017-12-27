@@ -169,6 +169,17 @@ public class OrginfoRestController {
 		}
 	}
 	
+	@RequestMapping(value = "/bcOrgInfo/adminGetUpdateRequests", method = RequestMethod.POST)
+	@ResponseBody
+	public OrgUpdateRequest[] getOrgUpdateRequests(@RequestBody QueryObject q, HttpServletRequest req, HttpServletResponse response) {
+		OrgUpdateRequest[] ours = orgDAO.getOrgUpdateRequests(q.getQ().replaceAll("\'", "\""), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(ours != null){
+			return ours;
+		}else{
+			return new OrgUpdateRequest[0];
+		}
+	}
+	
 	@RequestMapping(value = "/bcOrgInfo/leave/{orgId}", method = RequestMethod.POST)
 	@ResponseBody
 	public void leave(@PathVariable String orgId, @RequestBody RemarkObject r, HttpServletRequest req) {

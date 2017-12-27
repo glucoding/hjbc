@@ -96,5 +96,17 @@ public class TradeContextRestController {
 			return new TradeContext[0];
 		}
 	}
+	
+	@RequestMapping(value = "/bcTradeContext/getDetailStatistics", method = RequestMethod.POST)
+	@ResponseBody
+	public Property[] getDetailStatistics(@RequestBody TradeContextHelper tcp, HttpServletRequest req, HttpServletResponse res) {
+		Property[] ts = tcDAO.getDetailStatistics(tcp.getTradeContexts(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+		if(ts != null){
+			return ts;
+		}else{
+			//res.setStatus(499);
+			return new Property[0];
+		}
+	}
 
 }

@@ -13,4 +13,6 @@ public interface TradeContextDAO {
 	void revoke(TradeContext[] contexts, String[] orgIds, String operator);
 	
 	TradeContext[] getGranted(String orgId, String operator);
+	
+	Property[] getDetailStatistics(TradeContext[] contexts, String operator);
 }
