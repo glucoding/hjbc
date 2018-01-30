@@ -17,6 +17,7 @@ import com.ibm.crl.bc.hejia.sdk.financing.FinancingIntention;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingProxy;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingRequest;
 import com.ibm.crl.bc.hejia.sdk.financing.ReceivableTransferRequest;
+import com.ibm.crl.bc.hejia.sdk.financing.RepaymentDetail;
 
 @Component("FinancingDAO")
 public class FinancingDAOImpl implements FinancingDAO {
@@ -549,6 +550,25 @@ public class FinancingDAOImpl implements FinancingDAO {
 	public void withdrawReceivableTransferRequest(String id, Attachment[] attachments, String remark, String operator) {
 		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
 			finProxy.withdrawReceivableTransferRequest(id, attachments, remark);//第二个参数attahment[]设为null
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		};	
+	}
+
+	@Override
+	public void confirmRepaymentRecordWithDetail(String finConId, String transferRecordId, RepaymentDetail rd,
+			String operator) {
+		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
+			finProxy.confirmRepaymentRecordWithDetail(finConId, transferRecordId, rd);
+		}catch(BlockchainException | IOException e){
+			e.printStackTrace();
+		};	
+	}
+
+	@Override
+	public void rejectLoanRecord(String finConId, String transferRecId, String remarks, String operator) {
+		try(FinancingProxy finProxy = SdkFactory.getInstance().getFinancingProxy(operator)){
+			finProxy.rejectLoanRecord(finConId, transferRecId, remarks);;
 		}catch(BlockchainException | IOException e){
 			e.printStackTrace();
 		};	

@@ -13,6 +13,7 @@ import com.ibm.crl.bc.hejia.sdk.financing.FinancingExecution;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingIntention;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingRequest;
 import com.ibm.crl.bc.hejia.sdk.financing.ReceivableTransferRequest;
+import com.ibm.crl.bc.hejia.sdk.financing.RepaymentDetail;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -462,5 +463,17 @@ public class FinancingRestController {
 	@ResponseBody
 	public void withdrawReceivableTransferRequest(@RequestBody ReceivableTransferRequest rtr, HttpServletRequest req) {
 		finDAO.withdrawReceivableTransferRequest(rtr.getId(), rtr.getAttachments(), rtr.getAgreement().getRemarks(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "bcConfirmRepaymentRecordWithDetail/{finConId}/{transferRecordId}", method = RequestMethod.POST)
+	@ResponseBody
+	public void confirmRepaymentRecordWithDetail(@PathVariable String finConId, @PathVariable String transferRecordId, @RequestBody  RepaymentDetail rd, HttpServletRequest req) {
+		finDAO.confirmRepaymentRecordWithDetail(finConId, transferRecordId, rd, MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
+	}
+	
+	@RequestMapping(value = "bcRejectLoanRecord/{finConId}/{transferRecordId}", method = RequestMethod.POST)
+	@ResponseBody
+	public void rejectLoanRecord(@PathVariable String finConId, @PathVariable String transferRecordId,  @RequestBody RemarkObject  r, HttpServletRequest req) {
+		finDAO.rejectLoanRecord(finConId, transferRecordId, r.getR(), MiscTool.getBase64Name(req.getHeader("Authorization").trim()));
 	}
 }

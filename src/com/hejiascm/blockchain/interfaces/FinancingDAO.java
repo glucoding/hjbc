@@ -9,6 +9,7 @@ import com.ibm.crl.bc.hejia.sdk.financing.FinancingExecution;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingIntention;
 import com.ibm.crl.bc.hejia.sdk.financing.FinancingRequest;
 import com.ibm.crl.bc.hejia.sdk.financing.ReceivableTransferRequest;
+import com.ibm.crl.bc.hejia.sdk.financing.RepaymentDetail;
 
 public interface FinancingDAO {
 	void closeRequest(String requestId, String remarks, String operator);
@@ -92,6 +93,9 @@ public interface FinancingDAO {
 	
 	void confirmReceivableTransferRequest(java.lang.String id, Attachment[] attachments, java.lang.String remark, String operator) ;
 	
-	void withdrawReceivableTransferRequest(java.lang.String id, Attachment[] attachments, java.lang.String remark,String operator); 
+	void withdrawReceivableTransferRequest(java.lang.String id, Attachment[] attachments, java.lang.String remark,String operator);
 	
+	void confirmRepaymentRecordWithDetail(String finConId, String transferRecordId, RepaymentDetail rd, String operator);
+
+	void rejectLoanRecord(String finConId, String transferRecId, String remarks, String operator);
 }

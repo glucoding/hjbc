@@ -85,5 +85,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xom-1.2.5.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/ezmorph-1.0.6.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hejia-sdk-java-2.5.0-all.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/evisible-2.5.0.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
